@@ -53,7 +53,7 @@
        </widget>
       </item>
       <item row="14" column="0" colspan="2">
-       <widget class="QGroupBox" name="groupBox">
+       <widget class="QGroupBox" name="stroke">
         <property name="title">
          <string>&amp;stroke</string>
         </property>
@@ -233,6 +233,9 @@
         <property name="checked">
          <bool>true</bool>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
        </widget>
       </item>
       <item row="1" column="1">
@@ -240,6 +243,9 @@
         <property name="text">
          <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
        </widget>
       </item>
       <item row="0" column="3">
@@ -247,6 +253,9 @@
         <property name="text">
          <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
        </widget>
       </item>
       <item row="0" column="2">
@@ -254,6 +263,9 @@
         <property name="text">
          <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
        </widget>
       </item>
       <item row="2" column="3">
@@ -261,6 +273,9 @@
         <property name="text">
          <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
        </widget>
       </item>
       <item row="1" column="3">
@@ -268,6 +283,9 @@
         <property name="text">
          <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
        </widget>
       </item>
       <item row="2" column="1">
@@ -275,6 +293,9 @@
         <property name="text">
          <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
        </widget>
       </item>
       <item row="1" column="0">
@@ -295,6 +316,9 @@
         <property name="text">
          <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
        </widget>
       </item>
       <item row="2" column="2">
@@ -302,6 +326,9 @@
         <property name="text">
          <string/>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
        </widget>
       </item>
       <item row="1" column="4">
@@ -405,4 +432,7 @@
    </hints>
   </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="anchorButtons"/>
+ </buttongroups>
 </ui>

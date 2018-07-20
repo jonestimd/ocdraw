@@ -26,11 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    rectangledialog.cpp
+    rectangledialog.cpp \
+    rectanglemodel.cpp \
+    ocdnamespace.cpp
 
 HEADERS += \
         mainwindow.h \
-    rectangledialog.h
+    rectangledialog.h \
+    rectanglemodel.h \
+    ocdnamespace.h
 
 FORMS += \
         mainwindow.ui \

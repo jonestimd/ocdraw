@@ -28,13 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     rectangledialog.cpp \
     rectanglemodel.cpp \
-    ocdnamespace.cpp
+    ocdnamespace.cpp \
+    tooldialog.cpp
 
 HEADERS += \
         mainwindow.h \
     rectangledialog.h \
     rectanglemodel.h \
-    ocdnamespace.h
+    ocdnamespace.h \
+    tooldialog.h
 
 FORMS += \
         mainwindow.ui \

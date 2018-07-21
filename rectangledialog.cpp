@@ -4,24 +4,23 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QColorDialog>
-#include <QDebug>
 
 RectangleDialog::RectangleDialog(QWidget *parent) :
-    QDialog(parent),
+    ToolDialog(parent),
     ui(new Ui::RectangleDialog)
 {
     ui->setupUi(this);
     ui->anchorX->setValidator(new QDoubleValidator());
     ui->anchorY->setValidator(new QDoubleValidator());
-    ui->width->setValidator(new QDoubleValidator(0, INFINITY, 6));
-    ui->height->setValidator(new QDoubleValidator(0, INFINITY, 6));
+    ui->width->setValidator(new QDoubleValidator(0, HUGE_VAL, 6));
+    ui->height->setValidator(new QDoubleValidator(0, HUGE_VAL, 6));
     ui->rotation->setValidator(new QDoubleValidator());
-    ui->radiusX->setValidator(new QDoubleValidator(0, INFINITY, 6));
-    ui->radiusY->setValidator(new QDoubleValidator(0, INFINITY, 6));
+    ui->radiusX->setValidator(new QDoubleValidator(0, HUGE_VAL, 6));
+    ui->radiusY->setValidator(new QDoubleValidator(0, HUGE_VAL, 6));
+    ui->strokeWidth->setValidator(new QDoubleValidator(0, HUGE_VAL, 6));
 
     QMetaEnum anchorEnum = OcDraw::anchorEnum();
-    QList<QAbstractButton*> buttons = ui->anchorButtons->buttons();
-    foreach (QAbstractButton* button, buttons) {
+    for (auto button : ui->anchorButtons->buttons()) {
         int id = anchorEnum.keyToValue(button->objectName().toLatin1().data());
         ui->anchorButtons->setId(button, id);
     }
@@ -111,7 +110,7 @@ void RectangleDialog::validate()
     }
     else if (editing) {
         editing = false;
-        emit deleteShape(&model);
+        emit deleteShape();
     }
 }
 
@@ -197,7 +196,7 @@ void RectangleDialog::on_strokeWidth_textChanged(const QString &arg1)
 void RectangleDialog::on_anchorButtons_buttonToggled(int id, bool checked)
 {
     if (checked) {
-        model.anchor = (OcDraw::Anchor) id;
+        model.anchor = static_cast<OcDraw::Anchor>(id);
         emit shapeChanged(&model, OcDraw::other);
     }
 }

@@ -7,6 +7,7 @@ namespace OcDraw
 {
     Q_NAMESPACE
 
+    // TODO use enum class
     enum Anchor {
         topLeft,
         top,
@@ -20,6 +21,7 @@ namespace OcDraw
     };
     Q_ENUM_NS(Anchor)
 
+    // TODO use enum class
     enum ModelChange {
         position,
         size,

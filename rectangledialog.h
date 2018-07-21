@@ -2,7 +2,7 @@
 #define RECTANGLEDIALOG_H
 
 #include "rectanglemodel.h"
-#include <QDialog>
+#include "tooldialog.h"
 #include <QColor>
 #include <QToolButton>
 
@@ -10,12 +10,12 @@ namespace Ui {
 class RectangleDialog;
 }
 
-class RectangleDialog : public QDialog
+class RectangleDialog : public ToolDialog
 {
     Q_OBJECT
 
 public:
-    explicit RectangleDialog(QWidget *parent = 0);
+    explicit RectangleDialog(QWidget *parent = nullptr);
     ~RectangleDialog();
 
 public slots:
@@ -23,7 +23,7 @@ public slots:
 
 signals:
     void addShape(RectangleModel *const model);
-    void deleteShape(RectangleModel *const model);
+    void deleteShape();
     void shapeChanged(RectangleModel *const model, OcDraw::ModelChange changeType);
 
 private slots:

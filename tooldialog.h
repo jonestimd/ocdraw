@@ -17,6 +17,7 @@ public slots:
 protected:
     void closeEvent(QCloseEvent *) override;
     void keyPressEvent(QKeyEvent *) override;
+    virtual void onClose();
 
 private:
     bool restorePosition;

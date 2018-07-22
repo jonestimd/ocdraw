@@ -6,11 +6,13 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    eventProxy()
 {
     ui->setupUi(this);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setScene(new QGraphicsScene());
+    ui->graphicsView->scene()->addItem(&eventProxy);
     ui->graphicsView->scene()->addLine(-100, 0, 100, 0, QPen(Qt::red));
     ui->graphicsView->scene()->addLine(0, -100, 0, 100, QPen(Qt::red));
 }
@@ -23,7 +25,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionRectangle_triggered()
 {
     if (!rectangleDialog) {
-        rectangleDialog = new RectangleDialog(this);
+        rectangleDialog = new RectangleDialog(this, &this->eventProxy);
         connect(rectangleDialog, &RectangleDialog::addShape, this, &MainWindow::on_addShape);
         connect(rectangleDialog, &RectangleDialog::deleteShape, this, &MainWindow::on_deleteShape);
     }

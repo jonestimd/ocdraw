@@ -17,14 +17,19 @@ void ToolDialog::show() {
 
 void ToolDialog::closeEvent(QCloseEvent* event)
 {
-    position = pos() - dynamic_cast<QWidget*>(parent())->pos();
+    onClose();
     QDialog::closeEvent(event);
 }
 
 void ToolDialog::keyPressEvent(QKeyEvent* event)
 {
     if (event->matches(QKeySequence::Cancel)) {
-	    position = pos() - dynamic_cast<QWidget*>(parent())->pos();
+        onClose();
     }
     QDialog::keyPressEvent(event);
+}
+
+void ToolDialog::onClose()
+{
+    position = pos() - dynamic_cast<QWidget*>(parent())->pos();
 }

@@ -5,6 +5,7 @@
 #include <QGraphicsItem>
 #include "rectangledialog.h"
 #include "rectanglemodel.h"
+#include "graphicsitemeventproxy.h"
 
 namespace Ui {
 class MainWindow;
@@ -28,6 +29,7 @@ private:
     RectangleDialog *rectangleDialog;
 
     QGraphicsItem* selected;
+    GraphicsItemEventProxy eventProxy;
 };
 
 #endif // MAINWINDOW_H

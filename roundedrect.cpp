@@ -1,4 +1,5 @@
 #include "roundedrect.h"
+#include <QDebug>
 
 RoundedRect::RoundedRect(qreal x, qreal y, qreal width, qreal height, QGraphicsItem* parent) :
     QGraphicsRectItem(x, y, width, height, parent)

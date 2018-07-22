@@ -5,10 +5,11 @@
 #include <QPixmap>
 #include <QColorDialog>
 
-RectangleDialog::RectangleDialog(QWidget *parent) :
+RectangleDialog::RectangleDialog(QWidget *parent, GraphicsItemEventProxy* eventProxy) :
     ToolDialog(parent),
     ui(new Ui::RectangleDialog)
 {
+    this->eventProxy = eventProxy;
     ui->setupUi(this);
     ui->anchorX->setValidator(new QDoubleValidator());
     ui->anchorY->setValidator(new QDoubleValidator());
@@ -41,22 +42,32 @@ RectangleDialog::~RectangleDialog()
 void RectangleDialog::editShape(RoundedRect *const shape)
 {
     this->rect = shape;
-    ui->anchorX->setText(QString::number(rect->x(), 'f'));
-    ui->anchorY->setText(QString::number(rect->y(), 'f'));
-    ui->width->setText(QString::number(rect->rect().width(), 'f'));
-    ui->height->setText(QString::number(rect->rect().height(), 'f'));
-    ui->radiusX->setText(QString::number(rect->cornerWidth(), 'f'));
-    ui->radiusY->setText(QString::number(rect->cornerHeight(), 'f'));
-    ui->rotation->setText(QString::number(rect->rotation(), 'f'));
+    setText(ui->anchorX, rect->x());
+    setText(ui->anchorY, rect->y());
+    setText(ui->width, rect->rect().width());
+    setText(ui->height, rect->rect().height());
+    setText(ui->radiusX, rect->cornerWidth());
+    setText(ui->radiusY, rect->cornerHeight());
+    setText(ui->rotation, rect->rotation());
 
     ui->fill->setChecked(rect->brush().color() != Qt::transparent);
     setColorIcon(rect->brush().color(), ui->fillColor);
 
     ui->stroke->setChecked(rect->pen().color() != Qt::transparent);
     setColorIcon(rect->pen().color(), ui->strokeColor);
-    ui->strokeWidth->setText(QString::number(rect->pen().widthF(), 'f'));
+    setText(ui->strokeWidth, rect->pen().widthF());
 
     ui->anchorButtons->button(rect->data(RectangleDialog::Anchor).value<int>())->setChecked(true);
+    watchEvents();
+}
+
+void RectangleDialog::onClose()
+{
+    ToolDialog::onClose();
+    if (rect != nullptr) {
+        unwatchEvents();
+        rect = nullptr;
+    }
 }
 
 void RectangleDialog::on_anchorX_textChanged(const QString &arg1)
@@ -102,9 +113,11 @@ void RectangleDialog::validate(qreal width, qreal height)
             else rect->setPen(QPen(Qt::transparent));
             rect->setBrush(QBrush(ui->fill->isChecked() ? fillColor : Qt::transparent));
             emit addShape(rect);
+            watchEvents();
         }
     }
     else if (rect != nullptr) {
+        unwatchEvents();
         rect = nullptr;
         emit deleteShape();
     }
@@ -185,6 +198,11 @@ void RectangleDialog::setColorIcon(const QColor color, QToolButton *button)
     button->setIcon(QIcon(pixmap));
 }
 
+void RectangleDialog::setText(QLineEdit *text, qreal value)
+{
+    text->setText(QString().sprintf("%.6g", value));
+}
+
 void RectangleDialog::on_strokeWidth_textChanged(const QString &arg1)
 {
     if (rect != nullptr) {
@@ -199,4 +217,25 @@ void RectangleDialog::on_anchorButtons_buttonToggled(int id, bool checked)
         rect->setData(Anchor, static_cast<OcDraw::Anchor>(id));
         emit shapeChanged(rect);
     }
+}
+
+void RectangleDialog::on_shapeMoved(QGraphicsItem* shape)
+{
+    if (shape == rect) {
+        setText(ui->anchorX, rect->x());
+        setText(ui->anchorY, rect->y());
+    }
+    else qDebug() << "wrong shape" << shape->type();
+}
+
+void RectangleDialog::watchEvents()
+{
+	rect->installSceneEventFilter(eventProxy);
+    connect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleDialog::on_shapeMoved);
+}
+
+void RectangleDialog::unwatchEvents()
+{
+	rect->removeSceneEventFilter(eventProxy);
+    disconnect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleDialog::on_shapeMoved);
 }

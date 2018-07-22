@@ -30,7 +30,8 @@ SOURCES += \
     rectanglemodel.cpp \
     ocdnamespace.cpp \
     tooldialog.cpp \
-    roundedrect.cpp
+    roundedrect.cpp \
+    graphicsitemeventproxy.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,7 +39,8 @@ HEADERS += \
     rectanglemodel.h \
     ocdnamespace.h \
     tooldialog.h \
-    roundedrect.h
+    roundedrect.h \
+    graphicsitemeventproxy.h
 
 FORMS += \
         mainwindow.ui \

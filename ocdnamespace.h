@@ -21,18 +21,6 @@ namespace OcDraw
     };
     Q_ENUM_NS(Anchor)
 
-    // TODO use enum class
-    enum ModelChange {
-        position,
-        size,
-        rotation,
-        anchor,
-        fill,
-        stroke,
-        other
-    };
-    Q_ENUM_NS(ModelChange)
-
     QMetaEnum anchorEnum();
 }
 #endif // OCDNAMESPACE_H

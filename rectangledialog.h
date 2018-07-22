@@ -3,7 +3,7 @@
 
 #include "rectanglemodel.h"
 #include "tooldialog.h"
-#include <QColor>
+#include "roundedrect.h"
 #include <QToolButton>
 
 namespace Ui {
@@ -17,14 +17,15 @@ class RectangleDialog : public ToolDialog
 public:
     explicit RectangleDialog(QWidget *parent = nullptr);
     ~RectangleDialog();
+    enum DataKey { Anchor };
 
 public slots:
-    void editShape(RectangleModel *const model);
+    void editShape(RoundedRect *const shape);
 
 signals:
-    void addShape(RectangleModel *const model);
+    void addShape(RoundedRect *const shape);
     void deleteShape();
-    void shapeChanged(RectangleModel *const model, OcDraw::ModelChange changeType);
+    void shapeChanged(RoundedRect *const shape);
 
 private slots:
     void on_anchorX_textChanged(const QString &arg1);
@@ -46,12 +47,11 @@ private slots:
 
 private:
     Ui::RectangleDialog *ui;
-    RectangleModel model;
-    bool editing;
+    RoundedRect* rect;
+    QColor fillColor;
+    QColor strokeColor;
 
-    void validate();
-    void setFillColor(const QColor fillColor);
-    void setStrokeColor(const QColor strokeColor);
+    void validate(qreal width, qreal height);
     void setColorIcon(const QColor color, QToolButton *button);
 };
 

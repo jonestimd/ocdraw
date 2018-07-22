@@ -20,9 +20,8 @@ public:
 
 private slots:
     void on_actionRectangle_triggered();
-    void on_addShape(RectangleModel *const model);
+    void on_addShape(QGraphicsRectItem *const rect);
     void on_deleteShape();
-    void on_shapChanged(RectangleModel *const model, OcDraw::ModelChange changeType);
 
 private:
     Ui::MainWindow *ui;

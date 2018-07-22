@@ -25,10 +25,12 @@ RectangleDialog::RectangleDialog(QWidget *parent) :
         ui->anchorButtons->setId(button, id);
     }
 
-    setColorIcon(model.fillColor, ui->fillColor);
-    setColorIcon(model.strokeColor, ui->strokeColor);
+    fillColor = Qt::black;
+    strokeColor = Qt::black;
+    setColorIcon(fillColor, ui->fillColor);
+    setColorIcon(strokeColor, ui->strokeColor);
 
-    editing = false;
+    rect = nullptr;
 }
 
 RectangleDialog::~RectangleDialog()
@@ -36,147 +38,143 @@ RectangleDialog::~RectangleDialog()
     delete ui;
 }
 
-void RectangleDialog::editShape(RectangleModel *const model)
+void RectangleDialog::editShape(RoundedRect *const shape)
 {
-    this->model.x = model->x;
-    ui->anchorX->setText(QString::number(model->x, 'f'));
+    this->rect = shape;
+    ui->anchorX->setText(QString::number(rect->x(), 'f'));
+    ui->anchorY->setText(QString::number(rect->y(), 'f'));
+    ui->width->setText(QString::number(rect->rect().width(), 'f'));
+    ui->height->setText(QString::number(rect->rect().height(), 'f'));
+    ui->radiusX->setText(QString::number(rect->cornerWidth(), 'f'));
+    ui->radiusY->setText(QString::number(rect->cornerHeight(), 'f'));
+    ui->rotation->setText(QString::number(rect->rotation(), 'f'));
 
-    this->model.y = model->y;
-    ui->anchorY->setText(QString::number(model->y, 'f'));
+    ui->fill->setChecked(rect->brush().color() != Qt::transparent);
+    setColorIcon(rect->brush().color(), ui->fillColor);
 
-    this->model.width = model->width;
-    ui->width->setText(QString::number(model->width, 'f'));
+    ui->stroke->setChecked(rect->pen().color() != Qt::transparent);
+    setColorIcon(rect->pen().color(), ui->strokeColor);
+    ui->strokeWidth->setText(QString::number(rect->pen().widthF(), 'f'));
 
-    this->model.height = model->height;
-    ui->height->setText(QString::number(model->height, 'f'));
-
-    this->model.cornerRadiusX = model->cornerRadiusX;
-    ui->radiusX->setText(QString::number(model->cornerRadiusX, 'f'));
-
-    this->model.cornerRadiusY = model->cornerRadiusY;
-    ui->radiusY->setText(QString::number(model->cornerRadiusY, 'f'));
-
-    this->model.rotation = model->rotation;
-    ui->rotation->setText(QString::number(model->rotation, 'f'));
-
-    this->model.fill = model->fill;
-    ui->fill->setChecked(model->fill);
-    setColorIcon(model->fillColor, ui->fillColor);
-
-    this->model.stroke = model->stroke;
-    ui->stroke->setChecked(model->stroke);
-    setColorIcon(model->strokeColor, ui->strokeColor);
-    this->model.strokeWidth = model->strokeWidth;
-    ui->strokeWidth->setText(QString::number(model->strokeWidth, 'f'));
-
-    this->model.anchor = model->anchor;
-    ui->anchorButtons->button(model->anchor)->setChecked(true);
-
-    editing = true;
+    ui->anchorButtons->button(rect->data(RectangleDialog::Anchor).value<int>())->setChecked(true);
 }
 
 void RectangleDialog::on_anchorX_textChanged(const QString &arg1)
 {
-    model.x = arg1.toDouble();
-    if (editing) emit shapeChanged(&model, OcDraw::position);
+    if (rect != nullptr) {
+	    rect->setX(arg1.toDouble());
+	    emit shapeChanged(rect);
+    }
 }
 
 void RectangleDialog::on_anchorY_textChanged(const QString &arg1)
 {
-    model.y = arg1.toDouble();
-    if (editing) emit shapeChanged(&model, OcDraw::position);
+    if (rect != nullptr) {
+	    rect->setY(arg1.toDouble());
+	    emit shapeChanged(rect);
+    }
 }
 
 void RectangleDialog::on_width_textChanged(const QString &arg1)
 {
-    model.width = arg1.toDouble();
-    validate();
+    validate(arg1.toDouble(), ui->height->text().toDouble());
 }
 
 void RectangleDialog::on_height_textChanged(const QString &arg1)
 {
-    model.height = arg1.toDouble();
-    validate();
+    validate(ui->width->text().toDouble(), arg1.toDouble());
 }
 
-void RectangleDialog::validate()
+void RectangleDialog::validate(qreal width, qreal height)
 {
-    if (model.width > 0 && model.height > 0) {
-        if (editing) emit shapeChanged(&model, OcDraw::size);
+    if (width > 0 && height > 0) {
+        if (rect != nullptr) {
+            rect->setRect(0, 0, width, height);
+            emit shapeChanged(rect);
+        }
         else {
-            editing = true;
-            emit addShape(&model);
+            rect = new RoundedRect(0, 0, width, height);
+            rect->setPos(ui->anchorX->text().toDouble(), ui->anchorY->text().toDouble());
+            rect->setRotation(ui->rotation->text().toDouble());
+            rect->setCornerWidth(ui->radiusX->text().toDouble());
+            rect->setCornerHeight(ui->radiusY->text().toDouble());
+            if (ui->stroke->isChecked()) rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
+            else rect->setPen(QPen(Qt::transparent));
+            rect->setBrush(QBrush(ui->fill->isChecked() ? fillColor : Qt::transparent));
+            emit addShape(rect);
         }
     }
-    else if (editing) {
-        editing = false;
+    else if (rect != nullptr) {
+        rect = nullptr;
         emit deleteShape();
     }
 }
 
 void RectangleDialog::on_radiusX_textChanged(const QString &arg1)
 {
-    model.cornerRadiusX = arg1.toDouble();
-    emit shapeChanged(&model, OcDraw::other);
+    if (rect != nullptr) {
+        rect->setCornerWidth(arg1.toDouble());
+        emit shapeChanged(rect);
+    }
 }
 
 void RectangleDialog::on_radiusY_textChanged(const QString &arg1)
 {
-    model.cornerRadiusY = arg1.toDouble();
-    emit shapeChanged(&model, OcDraw::other);
+    if (rect != nullptr) {
+        rect->setCornerHeight(arg1.toDouble());
+        emit shapeChanged(rect);
+    }
 }
 
 void RectangleDialog::on_rotation_textChanged(const QString &arg1)
 {
-    model.rotation = arg1.toDouble();
-    emit shapeChanged(&model, OcDraw::rotation);
+    if (rect != nullptr) {
+	    rect->setRotation(arg1.toDouble());
+	    emit shapeChanged(rect);
+    }
 }
 
 void RectangleDialog::on_fillColor_clicked()
 {
-    const QColor color = QColorDialog::getColor(model.fillColor, this, "Select Fill Color", QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
+    const QColor color = QColorDialog::getColor(fillColor, this, "Select Fill Color", QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
 
-    if (color.isValid()) {
-        setFillColor(color);
+    if (color.isValid() && color != fillColor) {
+        fillColor = color;
+        if (rect != nullptr && ui->fill->isChecked()) {
+            rect->setBrush(QBrush(fillColor));
+            setColorIcon(fillColor, ui->fillColor);
+		    emit shapeChanged(rect);
+        }
     }
 }
 
 void RectangleDialog::on_strokeColor_clicked()
 {
-    const QColor color = QColorDialog::getColor(model.strokeColor, this, "Select Stroke Color", QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
+    const QColor color = QColorDialog::getColor(strokeColor, this, "Select Stroke Color", QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
 
-    if (color.isValid()) {
-        setStrokeColor(color);
+    if (color.isValid() && color != strokeColor) {
+        strokeColor = color;
+        if (rect != nullptr && ui->stroke->isChecked()) {
+            rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
+            setColorIcon(strokeColor, ui->strokeColor);
+		    emit shapeChanged(rect);
+        }
     }
 }
 
 void RectangleDialog::on_fill_toggled(bool checked)
 {
-   model.fill = checked;
-   emit shapeChanged(&model, OcDraw::fill);
-}
-
-void RectangleDialog::setFillColor(const QColor fillColor)
-{
-    if (fillColor != model.fillColor) {
-        model.fillColor = fillColor;
-        setColorIcon(fillColor, ui->fillColor);
-        emit shapeChanged(&model, OcDraw::fill);
+    if (rect != nullptr) {
+	    rect->setBrush(QBrush(checked ? fillColor : Qt::transparent));
+        emit shapeChanged(rect);
     }
 }
 
 void RectangleDialog::on_stroke_toggled(bool checked)
 {
-   model.stroke = checked;
-   emit shapeChanged(&model, OcDraw::stroke);
-}
-
-void RectangleDialog::setStrokeColor(const QColor strokeColor)
-{
-    if (model.strokeColor != strokeColor) {
-        model.strokeColor = strokeColor;
-        setColorIcon(strokeColor, ui->strokeColor);
-        emit shapeChanged(&model, OcDraw::stroke);
+    if (rect != nullptr) {
+		rect->pen().setColor(checked ? strokeColor : Qt::transparent);
+        emit shapeChanged(rect);
     }
 }
 
@@ -189,14 +187,16 @@ void RectangleDialog::setColorIcon(const QColor color, QToolButton *button)
 
 void RectangleDialog::on_strokeWidth_textChanged(const QString &arg1)
 {
-    model.strokeWidth = arg1.toDouble();
-    emit shapeChanged(&model, OcDraw::stroke);
+    if (rect != nullptr) {
+	    rect->setPen(QPen(QBrush(strokeColor), arg1.toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
+	    emit shapeChanged(rect);
+    }
 }
 
 void RectangleDialog::on_anchorButtons_buttonToggled(int id, bool checked)
 {
-    if (checked) {
-        model.anchor = static_cast<OcDraw::Anchor>(id);
-        emit shapeChanged(&model, OcDraw::other);
+    if (checked && rect != nullptr) {
+        rect->setData(Anchor, static_cast<OcDraw::Anchor>(id));
+        emit shapeChanged(rect);
     }
 }

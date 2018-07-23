@@ -73,16 +73,16 @@ void RectangleDialog::onClose()
 void RectangleDialog::on_anchorX_textChanged(const QString &arg1)
 {
     if (rect != nullptr) {
-	    rect->setX(arg1.toDouble());
-	    emit shapeChanged(rect);
+        rect->setX(arg1.toDouble());
+        emit shapeChanged(rect);
     }
 }
 
 void RectangleDialog::on_anchorY_textChanged(const QString &arg1)
 {
     if (rect != nullptr) {
-	    rect->setY(arg1.toDouble());
-	    emit shapeChanged(rect);
+        rect->setY(arg1.toDouble());
+        emit shapeChanged(rect);
     }
 }
 
@@ -142,8 +142,8 @@ void RectangleDialog::on_radiusY_textChanged(const QString &arg1)
 void RectangleDialog::on_rotation_textChanged(const QString &arg1)
 {
     if (rect != nullptr) {
-	    rect->setRotation(arg1.toDouble());
-	    emit shapeChanged(rect);
+        rect->setRotation(arg1.toDouble());
+        emit shapeChanged(rect);
     }
 }
 
@@ -156,7 +156,7 @@ void RectangleDialog::on_fillColor_clicked()
         if (rect != nullptr && ui->fill->isChecked()) {
             rect->setBrush(QBrush(fillColor));
             setColorIcon(fillColor, ui->fillColor);
-		    emit shapeChanged(rect);
+            emit shapeChanged(rect);
         }
     }
 }
@@ -170,7 +170,7 @@ void RectangleDialog::on_strokeColor_clicked()
         if (rect != nullptr && ui->stroke->isChecked()) {
             rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
             setColorIcon(strokeColor, ui->strokeColor);
-		    emit shapeChanged(rect);
+            emit shapeChanged(rect);
         }
     }
 }
@@ -178,7 +178,7 @@ void RectangleDialog::on_strokeColor_clicked()
 void RectangleDialog::on_fill_toggled(bool checked)
 {
     if (rect != nullptr) {
-	    rect->setBrush(QBrush(checked ? fillColor : Qt::transparent));
+        rect->setBrush(QBrush(checked ? fillColor : Qt::transparent));
         emit shapeChanged(rect);
     }
 }
@@ -186,7 +186,7 @@ void RectangleDialog::on_fill_toggled(bool checked)
 void RectangleDialog::on_stroke_toggled(bool checked)
 {
     if (rect != nullptr) {
-		rect->pen().setColor(checked ? strokeColor : Qt::transparent);
+        rect->pen().setColor(checked ? strokeColor : Qt::transparent);
         emit shapeChanged(rect);
     }
 }
@@ -206,8 +206,8 @@ void RectangleDialog::setText(QLineEdit *text, qreal value)
 void RectangleDialog::on_strokeWidth_textChanged(const QString &arg1)
 {
     if (rect != nullptr) {
-	    rect->setPen(QPen(QBrush(strokeColor), arg1.toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
-	    emit shapeChanged(rect);
+        rect->setPen(QPen(QBrush(strokeColor), arg1.toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
+        emit shapeChanged(rect);
     }
 }
 
@@ -230,12 +230,12 @@ void RectangleDialog::on_shapeMoved(QGraphicsItem* shape)
 
 void RectangleDialog::watchEvents()
 {
-	rect->installSceneEventFilter(eventProxy);
+    rect->installSceneEventFilter(eventProxy);
     connect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleDialog::on_shapeMoved);
 }
 
 void RectangleDialog::unwatchEvents()
 {
-	rect->removeSceneEventFilter(eventProxy);
+    rect->removeSceneEventFilter(eventProxy);
     disconnect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleDialog::on_shapeMoved);
 }

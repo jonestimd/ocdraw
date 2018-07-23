@@ -8,7 +8,7 @@ ToolDialog::ToolDialog(QWidget *parent) :
 }
 
 void ToolDialog::show() {
-	QWidget* p = dynamic_cast<QWidget*>(parent());
+    QWidget* p = dynamic_cast<QWidget*>(parent());
     if (restorePosition) move(p->pos() + position);
     else move(p->geometry().topRight());
     restorePosition = true;

@@ -23,7 +23,7 @@ qreal RoundedRect::cornerWidth()
 void RoundedRect::setCornerWidth(qreal width)
 {
     if (m_cornerHeight != width) {
-	    m_cornerWidth = width;
+        m_cornerWidth = width;
         update(rect());
     }
 }
@@ -36,7 +36,7 @@ qreal RoundedRect::cornerHeight()
 void RoundedRect::setCornerHeight(qreal height)
 {
     if (m_cornerHeight != height) {
-	    m_cornerHeight = height;
+        m_cornerHeight = height;
         update(rect());
     }
 }

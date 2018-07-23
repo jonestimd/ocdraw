@@ -7,7 +7,7 @@ GraphicsItemEventProxy::GraphicsItemEventProxy(QGraphicsItem *parent) : QGraphic
 bool GraphicsItemEventProxy::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 {
     if (event->type() == QEvent::GraphicsSceneMouseMove) {
-		emit shapeMoved(watched);
+        emit shapeMoved(watched);
     }
     return false;
 }

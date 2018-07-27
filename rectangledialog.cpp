@@ -57,7 +57,8 @@ void RectangleDialog::editShape(RoundedRect *const shape)
     setColorIcon(rect->pen().color(), ui->strokeColor);
     setText(ui->strokeWidth, rect->pen().widthF());
 
-    ui->anchorButtons->button(rect->data(RectangleDialog::Anchor).value<int>())->setChecked(true);
+    ui->anchorButtons->button(rect->data(int(DataKey::anchor)).value<int>())->setChecked(true);
+
     watchEvents();
 }
 
@@ -72,6 +73,7 @@ void RectangleDialog::onClose()
 
 void RectangleDialog::on_anchorX_textChanged(const QString &arg1)
 {
+    //
     if (rect != nullptr) {
         rect->setX(arg1.toDouble());
         emit shapeChanged(rect);
@@ -214,7 +216,7 @@ void RectangleDialog::on_strokeWidth_textChanged(const QString &arg1)
 void RectangleDialog::on_anchorButtons_buttonToggled(int id, bool checked)
 {
     if (checked && rect != nullptr) {
-        rect->setData(Anchor, static_cast<OcDraw::Anchor>(id));
+        rect->setData(int(DataKey::anchor), static_cast<OcDraw::Anchor>(id));
         emit shapeChanged(rect);
     }
 }

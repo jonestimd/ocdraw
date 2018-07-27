@@ -3,7 +3,7 @@
 
 #include <QtCore>
 #include <QColor>
-#include "ocdnamespace.h"
+#include "ocdglobals.h"
 
 class RectangleModel
 {

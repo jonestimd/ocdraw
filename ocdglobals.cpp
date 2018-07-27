@@ -1,4 +1,4 @@
-#include "ocdnamespace.h"
+#include "ocdglobals.h"
 
 namespace OcDraw
 {

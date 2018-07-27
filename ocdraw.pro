@@ -28,19 +28,25 @@ SOURCES += \
         mainwindow.cpp \
     rectangledialog.cpp \
     rectanglemodel.cpp \
-    ocdnamespace.cpp \
     tooldialog.cpp \
     roundedrect.cpp \
-    graphicsitemeventproxy.cpp
+    graphicsitemeventproxy.cpp \
+    graphicsdiagram.cpp \
+    ocdglobals.cpp \
+    recthighlighter.cpp \
+    highlighter.cpp
 
 HEADERS += \
         mainwindow.h \
     rectangledialog.h \
     rectanglemodel.h \
-    ocdnamespace.h \
     tooldialog.h \
     roundedrect.h \
-    graphicsitemeventproxy.h
+    graphicsitemeventproxy.h \
+    graphicsdiagram.h \
+    ocdglobals.h \
+    recthighlighter.h \
+    highlighter.h
 
 FORMS += \
         mainwindow.ui \

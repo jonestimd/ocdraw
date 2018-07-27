@@ -19,7 +19,6 @@ class RectangleDialog : public ToolDialog
 public:
     explicit RectangleDialog(QWidget *parent, GraphicsItemEventProxy* eventProxy);
     ~RectangleDialog() override;
-    enum DataKey { Anchor };
 
 public slots:
     void editShape(RoundedRect *const shape);

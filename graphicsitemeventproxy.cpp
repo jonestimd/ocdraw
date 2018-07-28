@@ -20,4 +20,3 @@ QRectF GraphicsItemEventProxy::boundingRect() const
 void GraphicsItemEventProxy::paint(QPainter* /*painter*/, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/)
 {
 }
-

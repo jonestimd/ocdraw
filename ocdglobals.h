@@ -28,8 +28,6 @@ namespace OcDraw
     Q_ENUM_NS(Anchor)
 
     QMetaEnum anchorEnum();
-
-    const static QPointF CursorOffset(HIGHLIGHT_RADIUS, HIGHLIGHT_RADIUS);
 }
 
 /**

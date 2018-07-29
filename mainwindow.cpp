@@ -37,7 +37,7 @@ void MainWindow::on_actionRectangle_triggered()
     if (!rectangleForm) {
         rectangleForm = new RectangleForm(this, &this->eventProxy);
         connect(rectangleForm, &RectangleForm::addShape, this, &MainWindow::on_addShape);
-        connect(rectangleForm, &RectangleForm::shapeChanged, this, &MainWindow::on_shapeChanged);
+        connect(rectangleForm, &RectangleForm::shapeChanged, &diagram, &GraphicsDiagram::on_shapeChanged);
         connect(rectangleForm, &RectangleForm::deleteShape, this, &MainWindow::on_deleteShape);
     }
     toolDialog->show(rectangleForm);
@@ -50,15 +50,6 @@ void MainWindow::on_addShape(QGraphicsItem* rect)
     selected = rect;
     diagram.addToGroup(rect);
     selected->setFlag(QGraphicsItem::ItemIsMovable, true);
-}
-
-void MainWindow::on_shapeChanged(QGraphicsItem* shape)
-{
-    if (shape->parentItem() == &diagram) {
-        // force the group to update its bounding rect
-        diagram.removeFromGroup(shape);
-        diagram.addToGroup(shape);
-    }
 }
 
 void MainWindow::on_deleteShape(QGraphicsItem* shape)

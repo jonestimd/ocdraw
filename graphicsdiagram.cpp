@@ -39,6 +39,15 @@ void GraphicsDiagram::paint(QPainter* painter, const QStyleOptionGraphicsItem* o
     }
 }
 
+void GraphicsDiagram::on_shapeChanged(QGraphicsItem* shape)
+{
+    if (shape->parentItem() == this) {
+        // force update of group's bounding rect
+        removeFromGroup(highlighted);
+        addToGroup(highlighted);
+    }
+}
+
 void GraphicsDiagram::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 {
     hoverMoveEvent(event);
@@ -87,6 +96,7 @@ void GraphicsDiagram::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF delta = event->scenePos() - event->lastScenePos();
     highlighted->moveBy(delta.x(), delta.y());
+    on_shapeChanged(highlighted);
     hideHighlight = false;
     update(highlight);
 }

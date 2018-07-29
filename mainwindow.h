@@ -24,7 +24,6 @@ public:
 private slots:
     void on_actionRectangle_triggered();
     void on_addShape(QGraphicsItem* rect);
-    void on_shapeChanged(QGraphicsItem* shape);
     void on_deleteShape(QGraphicsItem* shape);
     void on_selectShape(QGraphicsItem* shape, QPointF scenePos);
 

@@ -22,9 +22,10 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
 signals:
-    void selectShape(QGraphicsItem *shape, QPointF pos);
+    void selectShape(QGraphicsItem* shape, QPointF pos);
 
 public slots:
+    void on_shapeChanged(QGraphicsItem* shape);
 
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event) override;
@@ -39,7 +40,7 @@ private:
     QRectF search;
     QRectF highlight;
     QBrush highlightBrush;
-    QGraphicsItem *highlighted;
+    QGraphicsItem* highlighted;
     bool hideHighlight;
 };
 

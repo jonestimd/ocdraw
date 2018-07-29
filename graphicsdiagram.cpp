@@ -43,8 +43,8 @@ void GraphicsDiagram::on_shapeChanged(QGraphicsItem* shape)
 {
     if (shape->parentItem() == this) {
         // force update of group's bounding rect
-        removeFromGroup(highlighted);
-        addToGroup(highlighted);
+        removeFromGroup(shape);
+        addToGroup(shape);
     }
 }
 

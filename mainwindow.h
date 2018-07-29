@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include <QGraphicsItem>
-#include "rectangledialog.h"
+#include "shapedialog.h"
+#include "rectangleform.h"
 #include "rectanglemodel.h"
 #include "graphicsitemeventproxy.h"
 #include "graphicsdiagram.h"
@@ -23,12 +24,14 @@ public:
 private slots:
     void on_actionRectangle_triggered();
     void on_addShape(QGraphicsItem* rect);
-    void on_shapeChanged(QGraphicsItem *shape);
-    void on_deleteShape();
+    void on_shapeChanged(QGraphicsItem* shape);
+    void on_deleteShape(QGraphicsItem* shape);
+    void on_selectShape(QGraphicsItem* shape, QPointF scenePos);
 
 private:
-    Ui::MainWindow *ui;
-    RectangleDialog *rectangleDialog;
+    Ui::MainWindow* ui;
+    ShapeDialog* toolDialog;
+    RectangleForm* rectangleForm;
 
     QGraphicsItem* selected;
     GraphicsItemEventProxy eventProxy;

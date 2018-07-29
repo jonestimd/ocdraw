@@ -7,8 +7,11 @@
 class RoundedRect : public QGraphicsRectItem
 {
 public:
+    enum { Type = UserType + 1 };
     RoundedRect(qreal x, qreal y, qreal width, qreal height, QGraphicsItem* parent = nullptr);
     virtual ~RoundedRect() override;
+
+    int type() const override;
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 

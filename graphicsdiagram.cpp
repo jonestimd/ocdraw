@@ -79,6 +79,7 @@ void GraphicsDiagram::mousePressEvent(QGraphicsSceneMouseEvent *event)
     else {
         hideHighlight = true;
         update(highlight);
+        emit selectShape(highlighted, event->scenePos());
     }
 }
 

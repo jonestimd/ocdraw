@@ -1,13 +1,13 @@
-#include "rectangledialog.h"
-#include "ui_rectangledialog.h"
+#include "rectangleform.h"
+#include "ui_rectangleform.h"
 #include <QDoubleValidator>
 #include <QIcon>
 #include <QPixmap>
 #include <QColorDialog>
 
-RectangleDialog::RectangleDialog(QWidget *parent, GraphicsItemEventProxy* eventProxy) :
-    ToolDialog(parent),
-    ui(new Ui::RectangleDialog)
+RectangleForm::RectangleForm(QWidget *parent, GraphicsItemEventProxy* eventProxy) :
+    ShapeForm(parent),
+    ui(new Ui::RectangleForm)
 {
     this->eventProxy = eventProxy;
     ui->setupUi(this);
@@ -32,55 +32,55 @@ RectangleDialog::RectangleDialog(QWidget *parent, GraphicsItemEventProxy* eventP
     setColorIcon(strokeColor, ui->strokeColor);
 
     rect = nullptr;
+    ui->deleteButton->setEnabled(false);
 }
 
-RectangleDialog::~RectangleDialog()
+RectangleForm::~RectangleForm()
 {
     delete ui;
 }
 
-void RectangleDialog::editShape(RoundedRect *const shape)
+void RectangleForm::show()
 {
-    this->rect = shape;
-    setText(ui->anchorX, rect->x());
-    setText(ui->anchorY, rect->y());
-    setText(ui->width, rect->rect().width());
-    setText(ui->height, rect->rect().height());
-    setText(ui->radiusX, rect->cornerWidth());
-    setText(ui->radiusY, rect->cornerHeight());
-    setText(ui->rotation, rect->rotation());
-
-    ui->fill->setChecked(rect->brush().color() != Qt::transparent);
-    setColorIcon(rect->brush().color(), ui->fillColor);
-
-    ui->stroke->setChecked(rect->pen().color() != Qt::transparent);
-    setColorIcon(rect->pen().color(), ui->strokeColor);
-    setText(ui->strokeWidth, rect->pen().widthF());
-
-    ui->anchorButtons->button(rect->data(int(DataKey::anchor)).value<int>())->setChecked(true);
-
-    watchEvents();
+    setWindowTitle("Rectangle");
+    reset();
 }
 
-void RectangleDialog::onClose()
+void RectangleForm::editShape(RoundedRect *const shape)
 {
-    ToolDialog::onClose();
-    if (rect != nullptr) {
-        unwatchEvents();
-        rect = nullptr;
+    if (this->rect != shape) {
+        if (this->rect != nullptr) unwatchEvents();
+        this->rect = shape;
+        setText(ui->anchorX, rect->x());
+        setText(ui->anchorY, rect->y());
+        setText(ui->width, rect->rect().width());
+        setText(ui->height, rect->rect().height());
+        setText(ui->radiusX, rect->cornerWidth());
+        setText(ui->radiusY, rect->cornerHeight());
+        setText(ui->rotation, rect->rotation());
+
+        ui->fill->setChecked(rect->brush().color() != Qt::transparent);
+        setColorIcon(rect->brush().color(), ui->fillColor);
+
+        ui->stroke->setChecked(rect->pen().color() != Qt::transparent);
+        setColorIcon(rect->pen().color(), ui->strokeColor);
+        setText(ui->strokeWidth, rect->pen().widthF());
+
+        ui->anchorButtons->button(rect->data(int(DataKey::anchor)).value<int>())->setChecked(true);
+
+        watchEvents();
     }
 }
 
-void RectangleDialog::on_anchorX_textChanged(const QString &arg1)
+void RectangleForm::on_anchorX_textEdited(const QString &arg1)
 {
-    //
     if (rect != nullptr) {
         rect->setX(arg1.toDouble());
         emit shapeChanged(rect);
     }
 }
 
-void RectangleDialog::on_anchorY_textChanged(const QString &arg1)
+void RectangleForm::on_anchorY_textEdited(const QString &arg1)
 {
     if (rect != nullptr) {
         rect->setY(arg1.toDouble());
@@ -88,17 +88,17 @@ void RectangleDialog::on_anchorY_textChanged(const QString &arg1)
     }
 }
 
-void RectangleDialog::on_width_textChanged(const QString &arg1)
+void RectangleForm::on_width_textEdited(const QString &arg1)
 {
     validate(arg1.toDouble(), ui->height->text().toDouble());
 }
 
-void RectangleDialog::on_height_textChanged(const QString &arg1)
+void RectangleForm::on_height_textEdited(const QString &arg1)
 {
     validate(ui->width->text().toDouble(), arg1.toDouble());
 }
 
-void RectangleDialog::validate(qreal width, qreal height)
+void RectangleForm::validate(qreal width, qreal height)
 {
     if (width > 0 && height > 0) {
         if (rect != nullptr) {
@@ -120,12 +120,13 @@ void RectangleDialog::validate(qreal width, qreal height)
     }
     else if (rect != nullptr) {
         unwatchEvents();
+        emit deleteShape(rect);
         rect = nullptr;
-        emit deleteShape();
     }
+    ui->deleteButton->setEnabled(rect != nullptr);
 }
 
-void RectangleDialog::on_radiusX_textChanged(const QString &arg1)
+void RectangleForm::on_radiusX_textEdited(const QString &arg1)
 {
     if (rect != nullptr) {
         rect->setCornerWidth(arg1.toDouble());
@@ -133,7 +134,7 @@ void RectangleDialog::on_radiusX_textChanged(const QString &arg1)
     }
 }
 
-void RectangleDialog::on_radiusY_textChanged(const QString &arg1)
+void RectangleForm::on_radiusY_textEdited(const QString &arg1)
 {
     if (rect != nullptr) {
         rect->setCornerHeight(arg1.toDouble());
@@ -141,7 +142,7 @@ void RectangleDialog::on_radiusY_textChanged(const QString &arg1)
     }
 }
 
-void RectangleDialog::on_rotation_textChanged(const QString &arg1)
+void RectangleForm::on_rotation_textEdited(const QString &arg1)
 {
     if (rect != nullptr) {
         rect->setRotation(arg1.toDouble());
@@ -149,7 +150,7 @@ void RectangleDialog::on_rotation_textChanged(const QString &arg1)
     }
 }
 
-void RectangleDialog::on_fillColor_clicked()
+void RectangleForm::on_fillColor_clicked()
 {
     const QColor color = QColorDialog::getColor(fillColor, this, "Select Fill Color", QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
 
@@ -163,7 +164,7 @@ void RectangleDialog::on_fillColor_clicked()
     }
 }
 
-void RectangleDialog::on_strokeColor_clicked()
+void RectangleForm::on_strokeColor_clicked()
 {
     const QColor color = QColorDialog::getColor(strokeColor, this, "Select Stroke Color", QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
 
@@ -177,7 +178,7 @@ void RectangleDialog::on_strokeColor_clicked()
     }
 }
 
-void RectangleDialog::on_fill_toggled(bool checked)
+void RectangleForm::on_fill_toggled(bool checked)
 {
     if (rect != nullptr) {
         rect->setBrush(QBrush(checked ? fillColor : Qt::transparent));
@@ -185,7 +186,7 @@ void RectangleDialog::on_fill_toggled(bool checked)
     }
 }
 
-void RectangleDialog::on_stroke_toggled(bool checked)
+void RectangleForm::on_stroke_toggled(bool checked)
 {
     if (rect != nullptr) {
         rect->pen().setColor(checked ? strokeColor : Qt::transparent);
@@ -193,19 +194,19 @@ void RectangleDialog::on_stroke_toggled(bool checked)
     }
 }
 
-void RectangleDialog::setColorIcon(const QColor color, QToolButton *button)
+void RectangleForm::setColorIcon(const QColor color, QToolButton *button)
 {
     QPixmap pixmap(16, 16);
     pixmap.fill(color);
     button->setIcon(QIcon(pixmap));
 }
 
-void RectangleDialog::setText(QLineEdit *text, qreal value)
+void RectangleForm::setText(QLineEdit *text, qreal value)
 {
     text->setText(QString().sprintf("%.6g", value));
 }
 
-void RectangleDialog::on_strokeWidth_textChanged(const QString &arg1)
+void RectangleForm::on_strokeWidth_textEdited(const QString &arg1)
 {
     if (rect != nullptr) {
         rect->setPen(QPen(QBrush(strokeColor), arg1.toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
@@ -213,7 +214,7 @@ void RectangleDialog::on_strokeWidth_textChanged(const QString &arg1)
     }
 }
 
-void RectangleDialog::on_anchorButtons_buttonToggled(int id, bool checked)
+void RectangleForm::on_anchorButtons_buttonToggled(int id, bool checked)
 {
     if (checked && rect != nullptr) {
         rect->setData(int(DataKey::anchor), static_cast<OcDraw::Anchor>(id));
@@ -221,7 +222,7 @@ void RectangleDialog::on_anchorButtons_buttonToggled(int id, bool checked)
     }
 }
 
-void RectangleDialog::on_shapeMoved(QGraphicsItem* shape)
+void RectangleForm::on_shapeMoved(QGraphicsItem* shape)
 {
     if (shape == rect) {
         setText(ui->anchorX, rect->x());
@@ -230,14 +231,39 @@ void RectangleDialog::on_shapeMoved(QGraphicsItem* shape)
     else qDebug() << "wrong shape" << shape->type();
 }
 
-void RectangleDialog::watchEvents()
+void RectangleForm::watchEvents()
 {
     rect->installSceneEventFilter(eventProxy);
-    connect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleDialog::on_shapeMoved);
+    connect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleForm::on_shapeMoved);
 }
 
-void RectangleDialog::unwatchEvents()
+void RectangleForm::unwatchEvents()
 {
     rect->removeSceneEventFilter(eventProxy);
-    disconnect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleDialog::on_shapeMoved);
+    disconnect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleForm::on_shapeMoved);
+}
+
+void RectangleForm::reset()
+{
+    if (rect != nullptr) {
+        unwatchEvents();
+        rect = nullptr;
+    }
+    ui->anchorX->clear();
+    ui->anchorY->clear();
+    ui->width->clear();
+    ui->height->clear();
+    ui->rotation->clear();
+    ui->anchorX->setFocus();
+}
+
+void RectangleForm::on_newButton_clicked()
+{
+    reset();
+}
+
+void RectangleForm::on_deleteButton_clicked()
+{
+    if (rect != nullptr) emit deleteShape(rect);
+    reset();
 }

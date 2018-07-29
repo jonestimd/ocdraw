@@ -26,28 +26,30 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    rectangledialog.cpp \
     rectanglemodel.cpp \
-    tooldialog.cpp \
     roundedrect.cpp \
     graphicsitemeventproxy.cpp \
     graphicsdiagram.cpp \
     ocdglobals.cpp \
     recthighlighter.cpp \
-    highlighter.cpp
+    highlighter.cpp \
+    rectangleform.cpp \
+    shapeform.cpp \
+    shapedialog.cpp
 
 HEADERS += \
         mainwindow.h \
-    rectangledialog.h \
     rectanglemodel.h \
-    tooldialog.h \
     roundedrect.h \
     graphicsitemeventproxy.h \
     graphicsdiagram.h \
     ocdglobals.h \
     recthighlighter.h \
-    highlighter.h
+    highlighter.h \
+    rectangleform.h \
+    shapeform.h \
+    shapedialog.h
 
 FORMS += \
         mainwindow.ui \
-    rectangledialog.ui
+    rectangleform.ui

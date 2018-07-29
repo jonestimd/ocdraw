@@ -1,27 +1,29 @@
-#include "tooldialog.h"
+#include "shapedialog.h"
 
-ToolDialog::ToolDialog(QWidget *parent) :
+ShapeDialog::ShapeDialog(QWidget* parent) :
     QDialog(parent)
 {
     restorePosition = false;
     position = QPoint();
 }
 
-void ToolDialog::show() {
+void ShapeDialog::show(ShapeForm* form) {
     QWidget* p = dynamic_cast<QWidget*>(parent());
     if (restorePosition) move(p->pos() + position);
     else move(p->geometry().topRight());
     restorePosition = true;
+    form->setParent(this);
+    form->show();
     QDialog::show();
 }
 
-void ToolDialog::closeEvent(QCloseEvent* event)
+void ShapeDialog::closeEvent(QCloseEvent* event)
 {
     onClose();
     QDialog::closeEvent(event);
 }
 
-void ToolDialog::keyPressEvent(QKeyEvent* event)
+void ShapeDialog::keyPressEvent(QKeyEvent* event)
 {
     if (event->matches(QKeySequence::Cancel)) {
         onClose();
@@ -29,7 +31,7 @@ void ToolDialog::keyPressEvent(QKeyEvent* event)
     QDialog::keyPressEvent(event);
 }
 
-void ToolDialog::onClose()
+void ShapeDialog::onClose()
 {
     position = pos() - dynamic_cast<QWidget*>(parent())->pos();
 }

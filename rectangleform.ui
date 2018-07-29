@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RectangleDialog</class>
- <widget class="QDialog" name="RectangleDialog">
+ <class>RectangleForm</class>
+ <widget class="QWidget" name="RectangleForm">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Rectangle</string>
   </property>
-  <property name="sizeGripEnabled">
+  <property name="sizeGripEnabled" stdset="0">
    <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">

@@ -6,6 +6,8 @@
 RoundedRect::RoundedRect(qreal x, qreal y, qreal width, qreal height, QGraphicsItem* parent) :
     QGraphicsRectItem(x, y, width, height, parent)
 {
+    m_cornerWidth = 0;
+    m_cornerHeight = 0;
     setAcceptHoverEvents(true);
     Highlighter* highlighter = new RectHighlighter(this);
     setData(int(DataKey::highlighter), QVariant::fromValue(highlighter));
@@ -14,6 +16,11 @@ RoundedRect::RoundedRect(qreal x, qreal y, qreal width, qreal height, QGraphicsI
 RoundedRect::~RoundedRect()
 {
     delete qvariant_cast<Highlighter*>(data(int(DataKey::highlighter)));
+}
+
+int RoundedRect::type() const
+{
+    return Type;
 }
 
 void RoundedRect::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

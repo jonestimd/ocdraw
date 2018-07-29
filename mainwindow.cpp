@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "rectangledialog.h"
+#include "rectangleform.h"
 #include <QGraphicsScene>
 #include <QPen>
 
@@ -17,7 +17,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->scene()->addLine(-100, 0, 100, 0, QPen(Qt::red));
     ui->graphicsView->scene()->addLine(0, -100, 0, 100, QPen(Qt::red));
     ui->graphicsView->scene()->addItem(&diagram);
-//    diagram.setAcceptHoverEvents(true);
+
+    toolDialog = nullptr;
+    rectangleForm = nullptr;
+
+    connect(&diagram, &GraphicsDiagram::selectShape, this, &MainWindow::on_selectShape);
 }
 
 MainWindow::~MainWindow()
@@ -27,22 +31,24 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionRectangle_triggered()
 {
-    if (!rectangleDialog) {
-        rectangleDialog = new RectangleDialog(this, &this->eventProxy);
-        connect(rectangleDialog, &RectangleDialog::addShape, this, &MainWindow::on_addShape);
-        connect(rectangleDialog, &RectangleDialog::shapeChanged, this, &MainWindow::on_shapeChanged);
-        connect(rectangleDialog, &RectangleDialog::deleteShape, this, &MainWindow::on_deleteShape);
+    if (!toolDialog) {
+        toolDialog = new ShapeDialog(this);
     }
-    rectangleDialog->show();
-    rectangleDialog->raise();
-    rectangleDialog->activateWindow();
+    if (!rectangleForm) {
+        rectangleForm = new RectangleForm(this, &this->eventProxy);
+        connect(rectangleForm, &RectangleForm::addShape, this, &MainWindow::on_addShape);
+        connect(rectangleForm, &RectangleForm::shapeChanged, this, &MainWindow::on_shapeChanged);
+        connect(rectangleForm, &RectangleForm::deleteShape, this, &MainWindow::on_deleteShape);
+    }
+    toolDialog->show(rectangleForm);
+    toolDialog->raise();
+    toolDialog->activateWindow();
 }
 
 void MainWindow::on_addShape(QGraphicsItem* rect)
 {
     selected = rect;
-    diagram.addToGroup(rect); // TODO can't use mouse to move item in the group
-//    selected->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    diagram.addToGroup(rect);
     selected->setFlag(QGraphicsItem::ItemIsMovable, true);
 }
 
@@ -55,9 +61,19 @@ void MainWindow::on_shapeChanged(QGraphicsItem* shape)
     }
 }
 
-void MainWindow::on_deleteShape()
+void MainWindow::on_deleteShape(QGraphicsItem* shape)
 {
-    ui->graphicsView->scene()->removeItem(selected);
-    delete selected;
-    selected = nullptr;
+    if (shape != nullptr) {
+        ui->graphicsView->scene()->removeItem(shape);
+        delete shape;
+        if (selected == shape) selected = nullptr;
+    }
+}
+
+void MainWindow::on_selectShape(QGraphicsItem* shape, QPointF /*scenePos*/)
+{
+    if (shape->type() == RoundedRect::Type) {
+        if (!rectangleForm->isVisible()) on_actionRectangle_triggered();
+        rectangleForm->editShape(dynamic_cast<RoundedRect* const>(shape));
+    }
 }

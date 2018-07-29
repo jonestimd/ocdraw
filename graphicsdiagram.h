@@ -22,7 +22,7 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = nullptr) override;
 
 signals:
-//    void highlighShape(QGraphicsItem* shape, QPointF pos);
+    void selectShape(QGraphicsItem *shape, QPointF pos);
 
 public slots:
 

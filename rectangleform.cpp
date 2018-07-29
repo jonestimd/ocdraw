@@ -46,7 +46,7 @@ void RectangleForm::show()
     reset();
 }
 
-void RectangleForm::editShape(RoundedRect *const shape)
+void RectangleForm::editShape(RoundedRect* shape)
 {
     if (this->rect != shape) {
         if (this->rect != nullptr) unwatchEvents();

@@ -23,7 +23,7 @@ public:
     virtual void show() override;
 
 public slots:
-    void editShape(RoundedRect *const shape);
+    void editShape(RoundedRect* shape);
 
 signals:
     void addShape(RoundedRect *shape);

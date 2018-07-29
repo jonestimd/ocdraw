@@ -65,6 +65,6 @@ void MainWindow::on_selectShape(QGraphicsItem* shape, QPointF /*scenePos*/)
 {
     if (shape->type() == RoundedRect::Type) {
         if (!rectangleForm->isVisible()) on_actionRectangle_triggered();
-        rectangleForm->editShape(dynamic_cast<RoundedRect* const>(shape));
+        rectangleForm->editShape(qgraphicsitem_cast<RoundedRect*>(shape));
     }
 }

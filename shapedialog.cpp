@@ -8,7 +8,7 @@ ShapeDialog::ShapeDialog(QWidget* parent) :
 }
 
 void ShapeDialog::show(ShapeForm* form) {
-    QWidget* p = dynamic_cast<QWidget*>(parent());
+    QWidget* p = qobject_cast<QWidget*>(parent());
     if (restorePosition) move(p->pos() + position);
     else move(p->geometry().topRight());
     restorePosition = true;
@@ -33,5 +33,5 @@ void ShapeDialog::keyPressEvent(QKeyEvent* event)
 
 void ShapeDialog::onClose()
 {
-    position = pos() - dynamic_cast<QWidget*>(parent())->pos();
+    position = pos() - qobject_cast<QWidget*>(parent())->pos();
 }

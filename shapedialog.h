@@ -5,6 +5,9 @@
 #include <QKeyEvent>
 #include "shapeform.h"
 
+/**
+ * @brief The ShapeDialog class displays a form for editing the parameters of a shape.
+ */
 class ShapeDialog : public QDialog
 {
     Q_OBJECT

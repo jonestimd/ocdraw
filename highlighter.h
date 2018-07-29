@@ -5,7 +5,8 @@
 #include <QPointF>
 
 /**
- * @brief Helper for selecting a point to highlight on a shape.
+ * @brief The Highlighter class defines the interface for selecting the shape to highlight and the point to highlight on the shape.
+ * A highlighter is associated to a shape as a data element with the \c OcDraw::highlighter key.
  */
 class Highlighter
 {
@@ -16,7 +17,7 @@ public:
     /**
      * @brief Check if the cursor is within the selection range of the shape.
      * @param cursor position of the mouse in the shape's coordinates
-     * @return
+     * @return true if the shape is in range
      */
     virtual bool isInRange(QPointF cursor) const = 0;
 

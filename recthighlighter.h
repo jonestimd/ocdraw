@@ -6,7 +6,7 @@
 #include "roundedrect.h"
 
 /**
- * @brief Highlighter for rectangles.
+ * @brief The RectHighlighter class handles selecting the highlight point for rectangles.
  */
 class RectHighlighter : public Highlighter
 {

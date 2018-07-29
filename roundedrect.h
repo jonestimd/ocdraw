@@ -4,6 +4,9 @@
 #include <QGraphicsRectItem>
 #include <QPainter>
 
+/**
+ * @brief The RoundedRect class extends \c QGraphicsRectItem to display rounded corners.
+ */
 class RoundedRect : public QGraphicsRectItem
 {
 public:

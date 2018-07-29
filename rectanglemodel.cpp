@@ -2,7 +2,7 @@
 
 RectangleModel::RectangleModel()
 {
-    anchor = OcDraw::topLeft;
+    anchor = ShapeAnchor::TopLeft;
     x = y = width = height = 0;
     cornerRadiusX = cornerRadiusY = 0;
     rotation = 0;

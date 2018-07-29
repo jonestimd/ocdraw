@@ -1,8 +1,8 @@
 #ifndef RECTANGLEFORM_H
 #define RECTANGLEFORM_H
 
+#include "ocdglobals.h"
 #include "graphicsitemeventproxy.h"
-#include "rectanglemodel.h"
 #include "shapeform.h"
 #include "roundedrect.h"
 #include <QLineEdit>

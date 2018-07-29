@@ -3,19 +3,19 @@
 #include "recthighlighter.h"
 #include "QVariant"
 
-RoundedRect::RoundedRect(qreal x, qreal y, qreal width, qreal height, QGraphicsItem* parent) :
-    QGraphicsRectItem(x, y, width, height, parent)
+RoundedRect::RoundedRect(QRectF rect, QGraphicsItem* parent) :
+    QGraphicsRectItem(rect, parent)
 {
     m_cornerWidth = 0;
     m_cornerHeight = 0;
     setAcceptHoverEvents(true);
     Highlighter* highlighter = new RectHighlighter(this);
-    setData(int(DataKey::highlighter), QVariant::fromValue(highlighter));
+    setData(int(DataKey::Highlighter), QVariant::fromValue(highlighter));
 }
 
 RoundedRect::~RoundedRect()
 {
-    delete qvariant_cast<Highlighter*>(data(int(DataKey::highlighter)));
+    delete qvariant_cast<Highlighter*>(data(int(DataKey::Highlighter)));
 }
 
 int RoundedRect::type() const

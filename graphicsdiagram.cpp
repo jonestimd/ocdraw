@@ -58,7 +58,7 @@ void GraphicsDiagram::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
     search.moveCenter(event->scenePos());
     QList<QGraphicsItem*> items = scene()->items(search, Qt::IntersectsItemShape, Qt::AscendingOrder);
     for (int i = 0; i < items.length(); i++) {
-        Highlighter* highligher = qvariant_cast<Highlighter*>(items[i]->data(int(DataKey::highlighter)));
+        Highlighter* highligher = qvariant_cast<Highlighter*>(items[i]->data(int(DataKey::Highlighter)));
         if (highligher != nullptr) {
             QPointF localCursor = items[i]->mapFromScene(event->scenePos());
             if (highligher->isInRange(localCursor)) {

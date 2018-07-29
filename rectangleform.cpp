@@ -1,5 +1,6 @@
 #include "rectangleform.h"
 #include "ui_rectangleform.h"
+#include "shapeanchor.h"
 #include <QDoubleValidator>
 #include <QIcon>
 #include <QPixmap>
@@ -20,11 +21,7 @@ RectangleForm::RectangleForm(QWidget *parent, GraphicsItemEventProxy* eventProxy
     ui->radiusY->setValidator(new QDoubleValidator(0, HUGE_VAL, 6));
     ui->strokeWidth->setValidator(new QDoubleValidator(0, HUGE_VAL, 6));
 
-    QMetaEnum anchorEnum = OcDraw::anchorEnum();
-    for (auto button : ui->anchorButtons->buttons()) {
-        int id = anchorEnum.keyToValue(button->objectName().toLatin1().data());
-        ui->anchorButtons->setId(button, id);
-    }
+    ShapeAnchor::setButtonIds(ui->anchorButtons);
 
     fillColor = Qt::black;
     strokeColor = Qt::black;
@@ -66,7 +63,7 @@ void RectangleForm::editShape(RoundedRect* shape)
         setColorIcon(rect->pen().color(), ui->strokeColor);
         setText(ui->strokeWidth, rect->pen().widthF());
 
-        ui->anchorButtons->button(rect->data(int(DataKey::anchor)).value<int>())->setChecked(true);
+        ui->anchorButtons->button(rect->data(int(DataKey::Anchor)).value<int>())->setChecked(true);
 
         watchEvents();
     }
@@ -101,16 +98,18 @@ void RectangleForm::on_height_textEdited(const QString &arg1)
 void RectangleForm::validate(qreal width, qreal height)
 {
     if (width > 0 && height > 0) {
+        ShapeAnchor::Point anchor = static_cast<ShapeAnchor::Point>(ui->anchorButtons->checkedId());
         if (rect != nullptr) {
-            rect->setRect(0, 0, width, height);
+            rect->setRect(ShapeAnchor::getRect(anchor, width, height));
             emit shapeChanged(rect);
         }
         else {
-            rect = new RoundedRect(0, 0, width, height);
+            rect = new RoundedRect(ShapeAnchor::getRect(anchor, width, height));
             rect->setPos(ui->anchorX->text().toDouble(), ui->anchorY->text().toDouble());
             rect->setRotation(ui->rotation->text().toDouble());
             rect->setCornerWidth(ui->radiusX->text().toDouble());
             rect->setCornerHeight(ui->radiusY->text().toDouble());
+            rect->setData(int(DataKey::Anchor), anchor);
             if (ui->stroke->isChecked()) rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
             else rect->setPen(QPen(Qt::transparent));
             rect->setBrush(QBrush(ui->fill->isChecked() ? fillColor : Qt::transparent));
@@ -217,7 +216,9 @@ void RectangleForm::on_strokeWidth_textEdited(const QString &arg1)
 void RectangleForm::on_anchorButtons_buttonToggled(int id, bool checked)
 {
     if (checked && rect != nullptr) {
-        rect->setData(int(DataKey::anchor), static_cast<OcDraw::Anchor>(id));
+        ShapeAnchor::Point anchor = static_cast<ShapeAnchor::Point>(id);
+        rect->setData(int(DataKey::Anchor), anchor);
+        rect->setRect(ShapeAnchor::getRect(anchor, rect->rect().width(), rect->rect().height()));
         emit shapeChanged(rect);
     }
 }

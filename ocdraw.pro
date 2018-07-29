@@ -30,12 +30,12 @@ SOURCES += \
     roundedrect.cpp \
     graphicsitemeventproxy.cpp \
     graphicsdiagram.cpp \
-    ocdglobals.cpp \
     recthighlighter.cpp \
     highlighter.cpp \
     rectangleform.cpp \
     shapeform.cpp \
-    shapedialog.cpp
+    shapedialog.cpp \
+    shapeanchor.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,7 +48,8 @@ HEADERS += \
     highlighter.h \
     rectangleform.h \
     shapeform.h \
-    shapedialog.h
+    shapedialog.h \
+    shapeanchor.h
 
 FORMS += \
         mainwindow.ui \

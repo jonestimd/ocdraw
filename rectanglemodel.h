@@ -3,7 +3,7 @@
 
 #include <QtCore>
 #include <QColor>
-#include "ocdglobals.h"
+#include "shapeanchor.h"
 
 class RectangleModel
 {
@@ -11,7 +11,7 @@ class RectangleModel
 public:
     RectangleModel();
 
-    OcDraw::Anchor anchor;
+    ShapeAnchor::Point anchor;
     qreal x, y, width, height;
     qreal cornerRadiusX, cornerRadiusY;
     qreal rotation;

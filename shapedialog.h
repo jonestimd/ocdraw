@@ -26,6 +26,7 @@ protected:
 private:
     bool restorePosition;
     QPoint position;
+    QStackedLayout layout;
 };
 
 #endif // SHAPEDIALOG_H

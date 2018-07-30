@@ -20,7 +20,7 @@ public:
     explicit RectangleForm(QWidget *parent, GraphicsItemEventProxy* eventProxy);
     ~RectangleForm() override;
 
-    virtual void show() override;
+    virtual void initialize() override;
 
 public slots:
     void editShape(RoundedRect* shape);

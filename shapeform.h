@@ -17,7 +17,7 @@ public:
     /**
      * @brief Called by ShapeDialog to initialzie the form.
      */
-    virtual void show() = 0;
+    virtual void initialize() = 0;
 };
 
 #endif // SHAPEFORM_H

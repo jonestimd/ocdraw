@@ -37,7 +37,7 @@ RectangleForm::~RectangleForm()
     delete ui;
 }
 
-void RectangleForm::show()
+void RectangleForm::initialize()
 {
     setWindowTitle("Rectangle");
     reset();

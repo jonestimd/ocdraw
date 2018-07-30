@@ -1,10 +1,12 @@
 #include "shapedialog.h"
 
 ShapeDialog::ShapeDialog(QWidget* parent) :
-    QDialog(parent)
+    QDialog(parent),
+    layout()
 {
     restorePosition = false;
     position = QPoint();
+    setLayout(&layout);
 }
 
 void ShapeDialog::show(ShapeForm* form) {
@@ -12,8 +14,11 @@ void ShapeDialog::show(ShapeForm* form) {
     if (restorePosition) move(p->pos() + position);
     else move(p->geometry().topRight());
     restorePosition = true;
-    form->setParent(this);
-    form->show();
+    if (layout.currentWidget() != form) {
+        if (layout.count() == 0) layout.addWidget(form);
+        else layout.replaceWidget(layout.currentWidget(), form);
+    }
+    form->initialize();
     QDialog::show();
 }
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>224</width>
-    <height>497</height>
+    <height>538</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -226,6 +226,23 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>na&amp;me</string>
+     </property>
+     <property name="buddy">
+      <cstring>name</cstring>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="name">
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="anchorGroup">
      <property name="title">
       <string>&amp;anchor</string>
@@ -428,6 +445,7 @@
   <tabstop>stroke</tabstop>
   <tabstop>strokeWidth</tabstop>
   <tabstop>strokeColor</tabstop>
+  <tabstop>name</tabstop>
   <tabstop>TopLeft</tabstop>
   <tabstop>newButton</tabstop>
   <tabstop>deleteButton</tabstop>

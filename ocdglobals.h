@@ -9,7 +9,8 @@
  */
 enum class DataKey {
     Anchor,
-    Highlighter
+    Highlighter,
+    Name
 };
 
 #endif // OCDNAMESPACE_H

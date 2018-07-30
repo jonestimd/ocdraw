@@ -12,6 +12,9 @@ namespace Ui {
 class RectangleForm;
 }
 
+/**
+ * @brief The RectangleForm class provides the input controls for modifying the parameters of a rectangle.
+ */
 class RectangleForm : public ShapeForm
 {
     Q_OBJECT
@@ -40,6 +43,7 @@ private slots:
     void on_radiusX_textEdited(const QString &arg1);
     void on_radiusY_textEdited(const QString &arg1);
     void on_rotation_textEdited(const QString &arg1);
+    void on_name_textEdited(const QString &arg1);
 
     void on_fill_toggled(bool checked);
     void on_fillColor_clicked();
@@ -62,6 +66,7 @@ private:
     QColor fillColor;
     QColor strokeColor;
     GraphicsItemEventProxy* eventProxy;
+    long nextId;
 
     void validate(qreal width, qreal height);
     void setColorIcon(const QColor color, QToolButton *button);

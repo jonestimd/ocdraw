@@ -8,7 +8,8 @@
 
 RectangleForm::RectangleForm(QWidget *parent, GraphicsItemEventProxy* eventProxy) :
     ShapeForm(parent),
-    ui(new Ui::RectangleForm)
+    ui(new Ui::RectangleForm),
+    nextId(1)
 {
     this->eventProxy = eventProxy;
     ui->setupUi(this);
@@ -55,6 +56,9 @@ void RectangleForm::editShape(RoundedRect* shape)
         setText(ui->radiusX, rect->cornerWidth());
         setText(ui->radiusY, rect->cornerHeight());
         setText(ui->rotation, rect->rotation());
+        QVariant name = rect->data(int(DataKey::Name));
+        if (name.isValid()) ui->name->setText(qvariant_cast<QString>(name));
+        else ui->name->clear();
 
         ui->fill->setChecked(rect->brush().color() != Qt::transparent);
         setColorIcon(rect->brush().color(), ui->fillColor);
@@ -65,6 +69,7 @@ void RectangleForm::editShape(RoundedRect* shape)
 
         ui->anchorButtons->button(rect->data(int(DataKey::Anchor)).value<int>())->setChecked(true);
 
+        ui->deleteButton->setEnabled(true);
         watchEvents();
     }
 }
@@ -110,6 +115,7 @@ void RectangleForm::validate(qreal width, qreal height)
             rect->setCornerWidth(ui->radiusX->text().toDouble());
             rect->setCornerHeight(ui->radiusY->text().toDouble());
             rect->setData(int(DataKey::Anchor), anchor);
+            on_name_textEdited(ui->name->text());
             if (ui->stroke->isChecked()) rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
             else rect->setPen(QPen(Qt::transparent));
             rect->setBrush(QBrush(ui->fill->isChecked() ? fillColor : Qt::transparent));
@@ -146,6 +152,14 @@ void RectangleForm::on_rotation_textEdited(const QString &arg1)
     if (rect != nullptr) {
         rect->setRotation(arg1.toDouble());
         emit shapeChanged(rect);
+    }
+}
+
+void RectangleForm::on_name_textEdited(const QString &arg1)
+{
+    if (rect != nullptr) {
+        if (arg1.length() > 0) rect->setData(int(DataKey::Name), arg1);
+        else rect->setData(int(DataKey::Name), QVariant::Invalid);
     }
 }
 
@@ -249,13 +263,16 @@ void RectangleForm::reset()
     if (rect != nullptr) {
         unwatchEvents();
         rect = nullptr;
+        nextId++;
     }
     ui->anchorX->clear();
     ui->anchorY->clear();
     ui->width->clear();
     ui->height->clear();
     ui->rotation->clear();
+    ui->name->setText(QString("rect-%1").arg(nextId));
     ui->anchorX->setFocus();
+    ui->deleteButton->setEnabled(false);
 }
 
 void RectangleForm::on_newButton_clicked()

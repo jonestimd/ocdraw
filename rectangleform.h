@@ -2,7 +2,8 @@
 #define RECTANGLEFORM_H
 
 #include "ocdglobals.h"
-#include "graphicsitemeventproxy.h"
+#include "graphicsdiagram.h"
+#include "shapelistener.h"
 #include "shapeform.h"
 #include "roundedrect.h"
 #include <QLineEdit>
@@ -15,15 +16,16 @@ class RectangleForm;
 /**
  * @brief The RectangleForm class provides the input controls for modifying the parameters of a rectangle.
  */
-class RectangleForm : public ShapeForm
+class RectangleForm : public ShapeForm, public ShapeListener
 {
     Q_OBJECT
 
 public:
-    explicit RectangleForm(QWidget *parent, GraphicsItemEventProxy* eventProxy);
+    explicit RectangleForm(QWidget* parent, GraphicsDiagram* diagram);
     ~RectangleForm() override;
 
     virtual void initialize() override;
+    virtual void onShapeMoved(QGraphicsItem* shape) override;
 
 public slots:
     void editShape(RoundedRect* shape);
@@ -54,8 +56,6 @@ private slots:
 
     void on_anchorButtons_buttonToggled(int id, bool checked);
 
-    void on_shapeMoved(QGraphicsItem* shape);
-
     void on_newButton_clicked();
 
     void on_deleteButton_clicked();
@@ -65,7 +65,7 @@ private:
     RoundedRect* rect;
     QColor fillColor;
     QColor strokeColor;
-    GraphicsItemEventProxy* eventProxy;
+    GraphicsDiagram* diagram;
     long nextId;
 
     void validate(qreal width, qreal height);

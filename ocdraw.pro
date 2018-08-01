@@ -28,20 +28,19 @@ SOURCES += \
         mainwindow.cpp \
     rectanglemodel.cpp \
     roundedrect.cpp \
-    graphicsitemeventproxy.cpp \
     graphicsdiagram.cpp \
     recthighlighter.cpp \
     highlighter.cpp \
     rectangleform.cpp \
     shapeform.cpp \
     shapedialog.cpp \
-    shapeanchor.cpp
+    shapeanchor.cpp \
+    shapelistener.cpp
 
 HEADERS += \
         mainwindow.h \
     rectanglemodel.h \
     roundedrect.h \
-    graphicsitemeventproxy.h \
     graphicsdiagram.h \
     ocdglobals.h \
     recthighlighter.h \
@@ -49,7 +48,8 @@ HEADERS += \
     rectangleform.h \
     shapeform.h \
     shapedialog.h \
-    shapeanchor.h
+    shapeanchor.h \
+    shapelistener.h
 
 FORMS += \
         mainwindow.ui \

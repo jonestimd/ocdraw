@@ -13,6 +13,7 @@ GraphicsDiagram::GraphicsDiagram(QGraphicsItem* parent) :
 {
     highlighted = nullptr;
     hideHighlight = false;
+    this->shapeListener = nullptr;
 
     QRadialGradient gradient = QRadialGradient(0.5, 0.5, 1);
     gradient.setColorAt(0.0, Qt::yellow);
@@ -37,6 +38,16 @@ void GraphicsDiagram::paint(QPainter* painter, const QStyleOptionGraphicsItem* o
         painter->setBrush(highlightBrush);
         painter->drawEllipse(highlight);
     }
+}
+
+void GraphicsDiagram::setShapeListener(ShapeListener *listener)
+{
+    this->shapeListener = listener;
+}
+
+void GraphicsDiagram::clearShapeListener()
+{
+    this->shapeListener = nullptr;
 }
 
 void GraphicsDiagram::on_shapeChanged(QGraphicsItem* shape)
@@ -96,6 +107,7 @@ void GraphicsDiagram::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF delta = event->scenePos() - event->lastScenePos();
     highlighted->moveBy(delta.x(), delta.y());
+    if (shapeListener != nullptr) shapeListener->onShapeMoved(highlighted);
     on_shapeChanged(highlighted);
     hideHighlight = false;
     update(highlight);
@@ -105,4 +117,5 @@ void GraphicsDiagram::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF delta = event->scenePos() - event->lastScenePos();
     highlighted->moveBy(delta.x(), delta.y());
+    if (shapeListener != nullptr) shapeListener->onShapeMoved(highlighted);
 }

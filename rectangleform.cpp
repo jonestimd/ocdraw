@@ -6,12 +6,12 @@
 #include <QPixmap>
 #include <QColorDialog>
 
-RectangleForm::RectangleForm(QWidget *parent, GraphicsItemEventProxy* eventProxy) :
+RectangleForm::RectangleForm(QWidget *parent, GraphicsDiagram* diagram) :
     ShapeForm(parent),
     ui(new Ui::RectangleForm),
     nextId(1)
 {
-    this->eventProxy = eventProxy;
+    this->diagram = diagram;
     ui->setupUi(this);
     ui->anchorX->setValidator(new QDoubleValidator());
     ui->anchorY->setValidator(new QDoubleValidator());
@@ -42,6 +42,15 @@ void RectangleForm::initialize()
 {
     setWindowTitle("Rectangle");
     reset();
+}
+
+void RectangleForm::onShapeMoved(QGraphicsItem *shape)
+{
+    if (shape == rect) {
+        setText(ui->anchorX, rect->x());
+        setText(ui->anchorY, rect->y());
+    }
+    else qDebug() << "wrong shape" << shape->type();
 }
 
 void RectangleForm::editShape(RoundedRect* shape)
@@ -237,25 +246,14 @@ void RectangleForm::on_anchorButtons_buttonToggled(int id, bool checked)
     }
 }
 
-void RectangleForm::on_shapeMoved(QGraphicsItem* shape)
-{
-    if (shape == rect) {
-        setText(ui->anchorX, rect->x());
-        setText(ui->anchorY, rect->y());
-    }
-    else qDebug() << "wrong shape" << shape->type();
-}
-
 void RectangleForm::watchEvents()
 {
-    rect->installSceneEventFilter(eventProxy);
-    connect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleForm::on_shapeMoved);
+    diagram->setShapeListener(this);
 }
 
 void RectangleForm::unwatchEvents()
 {
-    rect->removeSceneEventFilter(eventProxy);
-    disconnect(eventProxy, &GraphicsItemEventProxy::shapeMoved, this, &RectangleForm::on_shapeMoved);
+    diagram->clearShapeListener();
 }
 
 void RectangleForm::reset()

@@ -28,26 +28,24 @@ SOURCES += \
         mainwindow.cpp \
     rectanglemodel.cpp \
     roundedrect.cpp \
-    recthighlighter.cpp \
-    highlighter.cpp \
     rectangleform.cpp \
     shapeform.cpp \
     shapedialog.cpp \
     shapeanchor.cpp \
-    diagramscene.cpp
+    diagramscene.cpp \
+    selectableshape.cpp
 
 HEADERS += \
         mainwindow.h \
     rectanglemodel.h \
     roundedrect.h \
     ocdglobals.h \
-    recthighlighter.h \
-    highlighter.h \
     rectangleform.h \
     shapeform.h \
     shapedialog.h \
     shapeanchor.h \
-    diagramscene.h
+    diagramscene.h \
+    selectableshape.h
 
 FORMS += \
         mainwindow.ui \

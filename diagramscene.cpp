@@ -1,5 +1,5 @@
 #include "diagramscene.h"
-#include "highlighter.h"
+#include "selectableshape.h"
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
@@ -61,7 +61,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         search.moveCenter(event->scenePos());
         QList<QGraphicsItem*> items = this->items(search, Qt::IntersectsItemShape, Qt::AscendingOrder);
         for (int i = 0; i < items.length(); i++) {
-            Highlighter* highligher = qvariant_cast<Highlighter*>(items[i]->data(int(DataKey::Highlighter)));
+            SelectableShape* highligher = dynamic_cast<SelectableShape*>(items[i]);
             if (highligher != nullptr) {
                 QPointF localCursor = items[i]->mapFromScene(event->scenePos());
                 if (highligher->isInRange(localCursor)) {

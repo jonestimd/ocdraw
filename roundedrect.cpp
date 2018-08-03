@@ -1,22 +1,17 @@
 #include "roundedrect.h"
 #include "ocdglobals.h"
-#include "recthighlighter.h"
 #include "QVariant"
 
 RoundedRect::RoundedRect(QRectF rect, QGraphicsItem* parent) :
-    QGraphicsRectItem(rect, parent)
+    QGraphicsRectItem(rect, parent),
+    SelectableShape()
 {
     m_cornerWidth = 0;
     m_cornerHeight = 0;
     setAcceptHoverEvents(true);
-    Highlighter* highlighter = new RectHighlighter(this);
-    setData(int(DataKey::Highlighter), QVariant::fromValue(highlighter));
 }
 
-RoundedRect::~RoundedRect()
-{
-    delete qvariant_cast<Highlighter*>(data(int(DataKey::Highlighter)));
-}
+RoundedRect::~RoundedRect() {}
 
 int RoundedRect::type() const
 {
@@ -56,4 +51,36 @@ void RoundedRect::setCornerHeight(qreal height)
         m_cornerHeight = height;
         update();
     }
+}
+
+bool RoundedRect::isInRange(QPointF cursor) const
+{
+    QRectF bounds = rect();
+    return isInside(cursor.x(), bounds.x(), bounds.width()) && isInside(cursor.y(), bounds.y(), bounds.height()) &&
+            (isOutside(cursor.x(), bounds.x(), bounds.width()) || isOutside(cursor.y(), bounds.y(), bounds.height()));
+}
+
+QPointF RoundedRect::selectPoint(QPointF cursor) const
+{
+    qreal x, y;
+    QRectF bounds = rect();
+    if (cursor.x() <= bounds.x()+HIGHLIGHT_RADIUS) x = bounds.x();
+    else if (cursor.x() >= bounds.x()+bounds.width()-HIGHLIGHT_RADIUS) x = bounds.x()+bounds.width();
+    else x = bounds.x()+bounds.width()/2;
+
+    if (cursor.y() <= bounds.y()+HIGHLIGHT_RADIUS) y = bounds.y();
+    else if (cursor.y() >= bounds.y()+bounds.height()-HIGHLIGHT_RADIUS) y = bounds.y()+bounds.height();
+    else y = bounds.y()+bounds.height()/2;
+
+    return QPointF(x, y);
+}
+
+bool RoundedRect::isInside(qreal value, qreal min, qreal size)
+{
+    return value >= min-HIGHLIGHT_RADIUS && value <= min+size+HIGHLIGHT_RADIUS;
+}
+
+bool RoundedRect::isOutside(qreal value, qreal min, qreal size)
+{
+    return value <= min+HIGHLIGHT_RADIUS || value >= min+size-HIGHLIGHT_RADIUS;
 }

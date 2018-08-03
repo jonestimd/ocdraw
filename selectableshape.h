@@ -1,18 +1,17 @@
 #ifndef HIGHLIGHTER_H
 #define HIGHLIGHTER_H
 
-#include <QObject>
 #include <QPointF>
 
 /**
  * @brief The Highlighter class defines the interface for selecting the shape to highlight and the point to highlight on the shape.
  * A highlighter is associated to a shape as a data element with the \c OcDraw::highlighter key.
  */
-class Highlighter
+class SelectableShape
 {
 public:
-    Highlighter();
-    virtual ~Highlighter();
+    SelectableShape();
+    virtual ~SelectableShape();
 
     /**
      * @brief Check if the cursor is within the selection range of the shape.
@@ -28,6 +27,5 @@ public:
      */
     virtual QPointF selectPoint(QPointF cursor) const = 0;
 };
-Q_DECLARE_METATYPE(Highlighter*)
 
 #endif // HIGHLIGHTER_H

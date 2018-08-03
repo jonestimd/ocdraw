@@ -9,7 +9,6 @@
  */
 enum class DataKey {
     Anchor,
-    Highlighter,
     Name
 };
 

@@ -1,27 +1,22 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "rectangleform.h"
-#include <QGraphicsScene>
+#include "diagramscene.h"
 #include <QPen>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    eventProxy(),
-    diagram()
+    ui(new Ui::MainWindow)
 {
+    DiagramScene* scene = new DiagramScene();
     ui->setupUi(this);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-    ui->graphicsView->setScene(new QGraphicsScene());
-    ui->graphicsView->scene()->addItem(&eventProxy);
-    ui->graphicsView->scene()->addLine(-100, 0, 100, 0, QPen(Qt::red));
-    ui->graphicsView->scene()->addLine(0, -100, 0, 100, QPen(Qt::red));
-    ui->graphicsView->scene()->addItem(&diagram);
+    ui->graphicsView->setScene(scene);
 
     toolDialog = nullptr;
     rectangleForm = nullptr;
 
-    connect(&diagram, &GraphicsDiagram::selectShape, this, &MainWindow::on_selectShape);
+    connect(scene, &DiagramScene::selectShape, this, &MainWindow::on_selectShape);
 }
 
 MainWindow::~MainWindow()
@@ -35,9 +30,8 @@ void MainWindow::on_actionRectangle_triggered()
         toolDialog = new ShapeDialog(this);
     }
     if (!rectangleForm) {
-        rectangleForm = new RectangleForm(this, &this->eventProxy);
+        rectangleForm = new RectangleForm(this, static_cast<DiagramScene*>(ui->graphicsView->scene()));
         connect(rectangleForm, &RectangleForm::addShape, this, &MainWindow::on_addShape);
-        connect(rectangleForm, &RectangleForm::shapeChanged, &diagram, &GraphicsDiagram::on_shapeChanged);
         connect(rectangleForm, &RectangleForm::deleteShape, this, &MainWindow::on_deleteShape);
     }
     toolDialog->show(rectangleForm);
@@ -48,7 +42,7 @@ void MainWindow::on_actionRectangle_triggered()
 void MainWindow::on_addShape(QGraphicsItem* rect)
 {
     selected = rect;
-    diagram.addToGroup(rect);
+    ui->graphicsView->scene()->addItem(rect);
     selected->setFlag(QGraphicsItem::ItemIsMovable, true);
 }
 

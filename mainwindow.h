@@ -6,8 +6,6 @@
 #include "shapedialog.h"
 #include "rectangleform.h"
 #include "rectanglemodel.h"
-#include "graphicsitemeventproxy.h"
-#include "graphicsdiagram.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,7 +17,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    virtual ~MainWindow() override;
 
 private slots:
     void on_actionRectangle_triggered();
@@ -33,8 +31,6 @@ private:
     RectangleForm* rectangleForm;
 
     QGraphicsItem* selected;
-    GraphicsItemEventProxy eventProxy;
-    GraphicsDiagram diagram;
 };
 
 #endif // MAINWINDOW_H

@@ -6,7 +6,7 @@
 #include <QPixmap>
 #include <QColorDialog>
 
-RectangleForm::RectangleForm(QWidget *parent, GraphicsDiagram* diagram) :
+RectangleForm::RectangleForm(QWidget *parent, DiagramScene* diagram) :
     ShapeForm(parent),
     ui(new Ui::RectangleForm),
     nextId(1)
@@ -44,7 +44,7 @@ void RectangleForm::initialize()
     reset();
 }
 
-void RectangleForm::onShapeMoved(QGraphicsItem *shape)
+void RectangleForm::on_ShapeMoved(QGraphicsItem *shape)
 {
     if (shape == rect) {
         setText(ui->anchorX, rect->x());
@@ -248,12 +248,12 @@ void RectangleForm::on_anchorButtons_buttonToggled(int id, bool checked)
 
 void RectangleForm::watchEvents()
 {
-    diagram->setShapeListener(this);
+    connect(diagram, &DiagramScene::shapeMoved, this, &RectangleForm::on_ShapeMoved);
 }
 
 void RectangleForm::unwatchEvents()
 {
-    diagram->clearShapeListener();
+    disconnect(diagram, &DiagramScene::shapeMoved, this, &RectangleForm::on_ShapeMoved);
 }
 
 void RectangleForm::reset()

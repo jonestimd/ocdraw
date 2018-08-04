@@ -76,7 +76,7 @@ void RectangleForm::editShape(RoundedRect* shape)
         setColorIcon(rect->pen().color(), ui->strokeColor);
         setText(ui->strokeWidth, rect->pen().widthF());
 
-        ui->anchorButtons->button(rect->data(int(DataKey::Anchor)).value<int>())->setChecked(true);
+        ui->anchorButtons->button(rect->anchor())->setChecked(true);
 
         ui->deleteButton->setEnabled(true);
         watchEvents();
@@ -123,7 +123,7 @@ void RectangleForm::validate(qreal width, qreal height)
             rect->setRotation(ui->rotation->text().toDouble());
             rect->setCornerWidth(ui->radiusX->text().toDouble());
             rect->setCornerHeight(ui->radiusY->text().toDouble());
-            rect->setData(int(DataKey::Anchor), anchor);
+            rect->setAnchor(anchor);
             on_name_textEdited(ui->name->text());
             if (ui->stroke->isChecked()) rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
             else rect->setPen(QPen(Qt::transparent));
@@ -240,8 +240,7 @@ void RectangleForm::on_anchorButtons_buttonToggled(int id, bool checked)
 {
     if (checked && rect != nullptr) {
         ShapeAnchor::Point anchor = static_cast<ShapeAnchor::Point>(id);
-        rect->setData(int(DataKey::Anchor), anchor);
-        rect->setRect(ShapeAnchor::getRect(anchor, rect->rect().width(), rect->rect().height()));
+        rect->setAnchor(anchor);
         emit shapeChanged(rect);
     }
 }

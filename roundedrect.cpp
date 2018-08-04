@@ -6,6 +6,7 @@ RoundedRect::RoundedRect(QRectF rect, QGraphicsItem* parent) :
     QGraphicsRectItem(rect, parent),
     SelectableShape()
 {
+    this->m_anchor = ShapeAnchor::TopLeft;
     m_cornerWidth = 0;
     m_cornerHeight = 0;
     setAcceptHoverEvents(true);
@@ -25,6 +26,17 @@ void RoundedRect::paint(QPainter* painter, const QStyleOptionGraphicsItem* optio
         painter->drawRoundedRect(rect(), m_cornerWidth, m_cornerHeight);
     }
     else QGraphicsRectItem::paint(painter, option, widget);
+}
+
+ShapeAnchor::Point RoundedRect::anchor()
+{
+    return this->m_anchor;
+}
+
+void RoundedRect::setAnchor(ShapeAnchor::Point anchor)
+{
+    this->m_anchor = anchor;
+    setRect(ShapeAnchor::getRect(anchor, rect().width(), rect().height()));
 }
 
 qreal RoundedRect::cornerWidth()

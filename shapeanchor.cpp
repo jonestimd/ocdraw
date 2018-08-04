@@ -24,3 +24,16 @@ QRectF ShapeAnchor::getRect(ShapeAnchor::Point anchor, qreal width, qreal height
 
     return QRectF(x, y, width, height);
 }
+
+ShapeAnchor::Point ShapeAnchor::getAnchor(QRectF rect, QPointF anchor)
+{
+    int point = 0;
+
+    if (anchor.x() == rect.right()) point += RIGHT;
+    else if (anchor.x() == rect.left()) point += LEFT;
+
+    if (anchor.y() == rect.top()) point += TOP;
+    else if (anchor.y() == rect.bottom()) point += BOTTOM;
+
+    return Point(point);
+}

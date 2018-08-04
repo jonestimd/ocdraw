@@ -2,6 +2,7 @@
 #define ROUNDEDRECT_H
 
 #include "selectableshape.h"
+#include "shapeanchor.h"
 #include <QGraphicsRectItem>
 #include <QPainter>
 
@@ -19,6 +20,9 @@ public:
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
+    ShapeAnchor::Point anchor();
+    void setAnchor(ShapeAnchor::Point anchor);
+
     qreal cornerWidth();
     void setCornerWidth(qreal width);
 
@@ -29,6 +33,7 @@ public:
     virtual QPointF selectPoint(QPointF cursor) const override;
 
 private:
+    ShapeAnchor::Point m_anchor;
     qreal m_cornerWidth;
     qreal m_cornerHeight;
 

@@ -33,6 +33,8 @@ namespace ShapeAnchor
     void setButtonIds(QButtonGroup* anchorButtonGroup);
 
     QRectF getRect(Point anchor, qreal width, qreal height);
+
+    Point getAnchor(QRectF rect, QPointF anchor);
 };
 
 #endif // SHAPEANCHOR_H

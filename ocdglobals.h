@@ -8,7 +8,6 @@
  * @brief Enum for QGraphicsItem data value keys.
  */
 enum class DataKey {
-    Anchor,
     Name
 };
 

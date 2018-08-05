@@ -12,8 +12,20 @@ public:
     DiagramScene(QObject* parent = nullptr);
 
 signals:
-    void selectShape(QGraphicsItem* shape, QPointF scenePos);
-    void shapeMoved(QGraphicsItem* shape);
+    /**
+     * @brief the selectShape signal is emitted when the user clicks on a shape.
+     * @param shape
+     * @param scenePos location of the selected control point on the shape
+     * @param action
+     */
+    void selectShape(QGraphicsItem* shape, QPointF scenePos, ShapeAction action);
+    /**
+     * @brief Then changeShape signal is emitted when the user is moving/editing a shape using the mouse.
+     * @param shape the shape to modify
+     * @param delta the amount to move the shape or control point
+     * @param complete true if this is the end of the edit
+     */
+    void changeShape(QGraphicsItem* shape, QPointF delta, bool complete);
 
 protected:
     virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
@@ -31,6 +43,8 @@ private:
     QGraphicsItem* highlighted;
 
     bool moving;
+
+    bool updateHighlight(QGraphicsItem* item, QPointF scenePos);
 };
 
 #endif // SCENE_H

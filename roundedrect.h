@@ -20,13 +20,15 @@ public:
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
-    ShapeAnchor::Point anchor();
+    ShapeAnchor::Point anchor() const;
     void setAnchor(ShapeAnchor::Point anchor);
 
-    qreal cornerWidth();
+    ShapeAnchor::Point moveTo(QPointF scenePos, ShapeAnchor::Point edges);
+
+    qreal cornerWidth() const;
     void setCornerWidth(qreal width);
 
-    qreal cornerHeight();
+    qreal cornerHeight() const;
     void setCornerHeight(qreal height);
 
     virtual bool isInRange(QPointF cursor) const override;

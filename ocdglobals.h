@@ -11,4 +11,9 @@ enum class DataKey {
     Name
 };
 
+enum class ShapeAction {
+    Edit,
+    Move
+};
+
 #endif // OCDNAMESPACE_H

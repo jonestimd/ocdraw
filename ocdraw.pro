@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+CONFIG   += c++14
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -33,7 +34,8 @@ SOURCES += \
     shapedialog.cpp \
     shapeanchor.cpp \
     diagramscene.cpp \
-    selectableshape.cpp
+    selectableshape.cpp \
+    shapeedit.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,7 +47,8 @@ HEADERS += \
     shapedialog.h \
     shapeanchor.h \
     diagramscene.h \
-    selectableshape.h
+    selectableshape.h \
+    shapeedit.h
 
 FORMS += \
         mainwindow.ui \

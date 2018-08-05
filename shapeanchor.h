@@ -30,11 +30,30 @@ namespace ShapeAnchor
     };
     Q_ENUM_NS(Point)
 
+    /**
+     * @brief Enum for selecting components of a shape anchor.
+     */
+    enum Mask {
+        Horizontal = LEFT + RIGHT,
+        Vertical = TOP + BOTTOM,
+        Both = Horizontal + Vertical
+    };
+
     void setButtonIds(QButtonGroup* anchorButtonGroup);
 
+    /**
+     * @brief Create a \c QRectF with the specified width, height and anchor point.
+     */
     QRectF getRect(Point anchor, qreal width, qreal height);
 
     Point getAnchor(QRectF rect, QPointF anchor);
+
+    int horizontal(Point value);
+    int vertical(Point value);
+    bool isCenter(Point value, Mask mask = Both);
+
+    Point swapX(Point value);
+    Point swapY(Point value);
 };
 
 #endif // SHAPEANCHOR_H

@@ -55,10 +55,10 @@ void MainWindow::on_deleteShape(QGraphicsItem* shape)
     }
 }
 
-void MainWindow::on_selectShape(QGraphicsItem* shape, QPointF /*scenePos*/)
+void MainWindow::on_selectShape(QGraphicsItem* shape, QPointF scenePos, ShapeAction action)
 {
     if (shape->type() == RoundedRect::Type) {
         if (!rectangleForm->isVisible()) on_actionRectangle_triggered();
-        rectangleForm->editShape(qgraphicsitem_cast<RoundedRect*>(shape));
+        rectangleForm->editShape(qgraphicsitem_cast<RoundedRect*>(shape), scenePos, action);
     }
 }

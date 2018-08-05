@@ -1,6 +1,5 @@
 #include "rectangleform.h"
 #include "ui_rectangleform.h"
-#include "shapeanchor.h"
 #include <QDoubleValidator>
 #include <QIcon>
 #include <QPixmap>
@@ -31,6 +30,8 @@ RectangleForm::RectangleForm(QWidget *parent, DiagramScene* diagram) :
 
     rect = nullptr;
     ui->deleteButton->setEnabled(false);
+
+    edit = nullptr;
 }
 
 RectangleForm::~RectangleForm()
@@ -44,16 +45,19 @@ void RectangleForm::initialize()
     reset();
 }
 
-void RectangleForm::on_ShapeMoved(QGraphicsItem *shape)
+void RectangleForm::on_changeShape(QGraphicsItem *shape, QPointF delta, bool complete)
 {
-    if (shape == rect) {
-        setText(ui->anchorX, rect->x());
-        setText(ui->anchorY, rect->y());
+    if (shape == rect && edit != nullptr) {
+        edit->adjust(delta);
+        if (complete) {
+            delete edit;
+            edit = nullptr;
+        }
     }
     else qDebug() << "wrong shape" << shape->type();
 }
 
-void RectangleForm::editShape(RoundedRect* shape)
+void RectangleForm::editShape(RoundedRect* shape, QPointF scenePos, ShapeAction action)
 {
     if (this->rect != shape) {
         if (this->rect != nullptr) unwatchEvents();
@@ -80,6 +84,10 @@ void RectangleForm::editShape(RoundedRect* shape)
 
         ui->deleteButton->setEnabled(true);
         watchEvents();
+    }
+    switch (action) {
+    case ShapeAction::Move : edit = new MoveRectangle(this); break;
+    case ShapeAction::Edit : edit = new ResizeRectangle(this, scenePos); break;
     }
 }
 
@@ -223,11 +231,6 @@ void RectangleForm::setColorIcon(const QColor color, QToolButton *button)
     button->setIcon(QIcon(pixmap));
 }
 
-void RectangleForm::setText(QLineEdit *text, qreal value)
-{
-    text->setText(QString().sprintf("%.6g", value));
-}
-
 void RectangleForm::on_strokeWidth_textEdited(const QString &arg1)
 {
     if (rect != nullptr) {
@@ -239,7 +242,7 @@ void RectangleForm::on_strokeWidth_textEdited(const QString &arg1)
 void RectangleForm::on_anchorButtons_buttonToggled(int id, bool checked)
 {
     if (checked && rect != nullptr) {
-        ShapeAnchor::Point anchor = static_cast<ShapeAnchor::Point>(id);
+        ShapeAnchor::Point anchor = ShapeAnchor::Point(id);
         rect->setAnchor(anchor);
         emit shapeChanged(rect);
     }
@@ -247,12 +250,12 @@ void RectangleForm::on_anchorButtons_buttonToggled(int id, bool checked)
 
 void RectangleForm::watchEvents()
 {
-    connect(diagram, &DiagramScene::shapeMoved, this, &RectangleForm::on_ShapeMoved);
+    connect(diagram, &DiagramScene::changeShape, this, &RectangleForm::on_changeShape);
 }
 
 void RectangleForm::unwatchEvents()
 {
-    disconnect(diagram, &DiagramScene::shapeMoved, this, &RectangleForm::on_ShapeMoved);
+    disconnect(diagram, &DiagramScene::changeShape, this, &RectangleForm::on_changeShape);
 }
 
 void RectangleForm::reset()
@@ -281,4 +284,37 @@ void RectangleForm::on_deleteButton_clicked()
 {
     if (rect != nullptr) emit deleteShape(rect);
     reset();
+}
+
+/* mouse handlers */
+
+RectangleForm::MoveRectangle::MoveRectangle(RectangleForm* form)
+{
+    this->form = form;
+}
+
+void RectangleForm::MoveRectangle::adjust(QPointF delta)
+{
+    form->rect->moveBy(delta.x(), delta.y());
+    setText(form->ui->anchorX, form->rect->x());
+    setText(form->ui->anchorY, form->rect->y());
+}
+
+RectangleForm::ResizeRectangle::ResizeRectangle(RectangleForm *form, QPointF scenePos) :
+    endPos(scenePos)
+{
+    this->form = form;
+    this->resizeHandle = ShapeAnchor::getAnchor(form->rect->rect(), form->rect->mapFromScene(scenePos));
+}
+
+void RectangleForm::ResizeRectangle::adjust(QPointF delta)
+{
+    endPos += delta;
+    resizeHandle = form->rect->moveTo(endPos, resizeHandle);
+
+    setText(form->ui->anchorX, form->rect->x());
+    setText(form->ui->anchorY, form->rect->y());
+    setText(form->ui->width, form->rect->rect().width());
+    setText(form->ui->height, form->rect->rect().height());
+    form->ui->anchorButtons->button(form->rect->anchor())->setChecked(true);
 }

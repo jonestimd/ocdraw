@@ -39,13 +39,12 @@ void DiagramScene::drawForeground(QPainter *painter, const QRectF &rect)
 }
 
 // TODO draw shape using mouse
-// TODO resize using ctrl+mouse
 void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (highlighted != nullptr && event->button() == Qt::LeftButton) {
         moving = true;
         update(highlight);
-        emit selectShape(highlighted, event->scenePos());
+        emit selectShape(highlighted, highlight.center(), event->modifiers() & Qt::ControlModifier ? ShapeAction::Edit : ShapeAction::Move);
     }
 }
 
@@ -53,28 +52,13 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (moving) {
         QPointF delta = event->scenePos() - event->lastScenePos();
-        highlighted->moveBy(delta.x(), delta.y());
-        highlight.translate(delta);
-        emit shapeMoved(highlighted);
+        emit changeShape(highlighted, delta, false);
     }
     else {
         search.moveCenter(event->scenePos());
         QList<QGraphicsItem*> items = this->items(search, Qt::IntersectsItemShape, Qt::AscendingOrder);
         for (int i = 0; i < items.length(); i++) {
-            SelectableShape* highligher = dynamic_cast<SelectableShape*>(items[i]);
-            if (highligher != nullptr) {
-                QPointF localCursor = items[i]->mapFromScene(event->scenePos());
-                if (highligher->isInRange(localCursor)) {
-                    const QRectF oldHighlight = highlight;
-                    highlight.moveCenter(items[i]->mapToScene(highligher->selectPoint(localCursor)));
-                    if (items[i] != highlighted || oldHighlight != highlight) {
-                        update(oldHighlight);
-                        update(highlight);
-                    }
-                    highlighted = items[i];
-                    return;
-                }
-            }
+            if (updateHighlight(items[i], event->scenePos())) return;
         }
         if (highlighted != nullptr) update(highlight);
         highlighted = nullptr;
@@ -86,9 +70,25 @@ void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (moving) {
         QPointF delta = event->scenePos() - event->lastScenePos();
         highlighted->moveBy(delta.x(), delta.y());
-        highlight.translate(delta);
-        emit shapeMoved(highlighted);
+        emit changeShape(highlighted, delta, true);
         moving = false;
-        update(highlight);
+        updateHighlight(highlighted, event->scenePos());
     }
+}
+
+bool DiagramScene::updateHighlight(QGraphicsItem* item, QPointF scenePos)
+{
+    SelectableShape* highligher = dynamic_cast<SelectableShape*>(item);
+    QPointF localCursor = item->mapFromScene(scenePos);
+    if (highligher->isInRange(localCursor)) {
+        const QRectF oldHighlight = highlight;
+        highlight.moveCenter(item->mapToScene(highligher->selectPoint(localCursor)));
+        if (item != highlighted || oldHighlight != highlight) {
+            update(oldHighlight);
+            update(highlight);
+        }
+        highlighted = item;
+        return true;
+    }
+    return false;
 }

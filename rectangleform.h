@@ -2,8 +2,10 @@
 #define RECTANGLEFORM_H
 
 #include "ocdglobals.h"
+#include "shapeanchor.h"
 #include "diagramscene.h"
 #include "shapeform.h"
+#include "shapeedit.h"
 #include "roundedrect.h"
 #include <QLineEdit>
 #include <QToolButton>
@@ -26,7 +28,7 @@ public:
     virtual void initialize() override;
 
 public slots:
-    void editShape(RoundedRect* shape);
+    void editShape(RoundedRect* shape, QPointF scenePos, ShapeAction action);
 
 signals:
     void addShape(RoundedRect *shape);
@@ -57,7 +59,7 @@ private slots:
     void on_newButton_clicked();
     void on_deleteButton_clicked();
 
-    void on_ShapeMoved(QGraphicsItem* shape);
+    void on_changeShape(QGraphicsItem* shape, QPointF delta, bool complete);
 
 private:
     Ui::RectangleForm *ui;
@@ -67,12 +69,32 @@ private:
     DiagramScene* diagram;
     long nextId;
 
+    ShapeEdit* edit;
+
     void validate(qreal width, qreal height);
     void setColorIcon(const QColor color, QToolButton *button);
-    void setText(QLineEdit* text, qreal value);
     void watchEvents();
     void unwatchEvents();
     void reset();
+
+    struct MoveRectangle : public ShapeEdit
+    {
+        MoveRectangle(RectangleForm* form);
+        virtual void adjust(QPointF delta) override;
+    private:
+        RectangleForm* form;
+    };
+
+    struct ResizeRectangle : public ShapeEdit
+    {
+        ResizeRectangle(RectangleForm* form, QPointF scenePos);
+        virtual void adjust(QPointF delta) override;
+    private:
+        RectangleForm* form;
+        ShapeAnchor::Point resizeHandle;
+        QPointF endPos;
+        qreal mx, my, mw, mh;
+    };
 };
 
 #endif // RECTANGLEFORM_H

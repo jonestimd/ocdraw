@@ -27,6 +27,7 @@ private slots:
 
 private:
     Ui::MainWindow* ui;
+    DiagramScene scene;
     ShapeDialog* toolDialog;
     RectangleForm* rectangleForm;
 

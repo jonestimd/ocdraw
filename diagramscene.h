@@ -11,6 +11,11 @@ class DiagramScene : public QGraphicsScene
 public:
     DiagramScene(QObject* parent = nullptr);
 
+    /**
+     * @brief Overrides \c QGraphicsScene to handle removal of the highlighted shape.
+     */
+    void removeItem(QGraphicsItem* item);
+
 signals:
     /**
      * @brief the selectShape signal is emitted when the user clicks on a shape.

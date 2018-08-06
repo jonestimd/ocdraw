@@ -6,17 +6,17 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    scene()
 {
-    DiagramScene* scene = new DiagramScene();
     ui->setupUi(this);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-    ui->graphicsView->setScene(scene);
+    ui->graphicsView->setScene(&scene);
 
     toolDialog = nullptr;
     rectangleForm = nullptr;
 
-    connect(scene, &DiagramScene::selectShape, this, &MainWindow::on_selectShape);
+    connect(&scene, &DiagramScene::selectShape, this, &MainWindow::on_selectShape);
 }
 
 MainWindow::~MainWindow()
@@ -43,13 +43,12 @@ void MainWindow::on_addShape(QGraphicsItem* rect)
 {
     selected = rect;
     ui->graphicsView->scene()->addItem(rect);
-    selected->setFlag(QGraphicsItem::ItemIsMovable, true);
 }
 
 void MainWindow::on_deleteShape(QGraphicsItem* shape)
 {
     if (shape != nullptr) {
-        ui->graphicsView->scene()->removeItem(shape);
+        scene.removeItem(shape);
         delete shape;
         if (selected == shape) selected = nullptr;
     }

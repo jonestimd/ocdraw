@@ -21,6 +21,15 @@ DiagramScene::DiagramScene(QObject* parent) :
     highlightBrush = QBrush(gradient);
 }
 
+void DiagramScene::removeItem(QGraphicsItem *item)
+{
+    QGraphicsScene::removeItem(item);
+    if (item == highlighted) {
+        highlighted = nullptr;
+        update(highlight);
+    }
+}
+
 void DiagramScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
     QGraphicsScene::drawBackground(painter, rect);

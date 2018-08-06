@@ -42,19 +42,35 @@ RectangleForm::~RectangleForm()
 void RectangleForm::initialize()
 {
     setWindowTitle("Rectangle");
+    connect(diagram, &DiagramScene::beginDraw, this, &RectangleForm::on_beginDraw);
     reset();
 }
 
-void RectangleForm::on_changeShape(QGraphicsItem *shape, QPointF delta, bool complete)
+void RectangleForm::uninitialize()
 {
-    if (shape == rect && edit != nullptr) {
+    disconnect(diagram, &DiagramScene::beginDraw, this, &RectangleForm::on_beginDraw);
+}
+
+void RectangleForm::on_changeShape(QPointF delta, bool complete)
+{
+    if (edit != nullptr) {
         edit->adjust(delta);
         if (complete) {
             delete edit;
             edit = nullptr;
+            validate(rect->rect().width(), rect->rect().height());
         }
     }
-    else qDebug() << "wrong shape" << shape->type();
+}
+
+void RectangleForm::on_beginDraw(QPointF scenePos)
+{
+    reset();
+    setText(ui->anchorX, scenePos.x());
+    setText(ui->anchorY, scenePos.y());
+    ShapeAnchor::Point anchor = ShapeAnchor::Point(ui->anchorButtons->checkedId());
+    createRect(anchor, 0, 0);
+    edit = new DrawRectangle(this, scenePos);
 }
 
 void RectangleForm::editShape(RoundedRect* shape, QPointF scenePos, ShapeAction action)
@@ -86,7 +102,7 @@ void RectangleForm::editShape(RoundedRect* shape, QPointF scenePos, ShapeAction 
         watchEvents();
     }
     switch (action) {
-    case ShapeAction::Move : edit = new MoveRectangle(this); break;
+    case ShapeAction::Move : edit = new MoveRectangle(this, scenePos); break;
     case ShapeAction::Edit : edit = new ResizeRectangle(this, scenePos); break;
     }
 }
@@ -120,25 +136,12 @@ void RectangleForm::on_height_textEdited(const QString &arg1)
 void RectangleForm::validate(qreal width, qreal height)
 {
     if (width > 0 && height > 0) {
-        ShapeAnchor::Point anchor = static_cast<ShapeAnchor::Point>(ui->anchorButtons->checkedId());
+        ShapeAnchor::Point anchor = ShapeAnchor::Point(ui->anchorButtons->checkedId());
         if (rect != nullptr) {
             rect->setRect(ShapeAnchor::getRect(anchor, width, height));
             emit shapeChanged(rect);
         }
-        else {
-            rect = new RoundedRect(ShapeAnchor::getRect(anchor, width, height));
-            rect->setPos(ui->anchorX->text().toDouble(), ui->anchorY->text().toDouble());
-            rect->setRotation(ui->rotation->text().toDouble());
-            rect->setCornerWidth(ui->radiusX->text().toDouble());
-            rect->setCornerHeight(ui->radiusY->text().toDouble());
-            rect->setAnchor(anchor);
-            on_name_textEdited(ui->name->text());
-            if (ui->stroke->isChecked()) rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
-            else rect->setPen(QPen(Qt::transparent));
-            rect->setBrush(QBrush(ui->fill->isChecked() ? fillColor : Qt::transparent));
-            emit addShape(rect);
-            watchEvents();
-        }
+        else createRect(anchor, width, height);
     }
     else if (rect != nullptr) {
         unwatchEvents();
@@ -146,6 +149,22 @@ void RectangleForm::validate(qreal width, qreal height)
         rect = nullptr;
     }
     ui->deleteButton->setEnabled(rect != nullptr);
+}
+
+void RectangleForm::createRect(ShapeAnchor::Point anchor, qreal width, qreal height)
+{
+    rect = new RoundedRect(ShapeAnchor::getRect(anchor, width, height));
+    rect->setPos(ui->anchorX->text().toDouble(), ui->anchorY->text().toDouble());
+    rect->setRotation(ui->rotation->text().toDouble());
+    rect->setCornerWidth(ui->radiusX->text().toDouble());
+    rect->setCornerHeight(ui->radiusY->text().toDouble());
+    rect->setAnchor(anchor);
+    on_name_textEdited(ui->name->text());
+    if (ui->stroke->isChecked()) rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
+    else rect->setPen(QPen(Qt::transparent));
+    rect->setBrush(QBrush(ui->fill->isChecked() ? fillColor : Qt::transparent));
+    emit addShape(rect);
+    watchEvents();
 }
 
 void RectangleForm::on_radiusX_textEdited(const QString &arg1)
@@ -286,35 +305,69 @@ void RectangleForm::on_deleteButton_clicked()
     reset();
 }
 
-/* mouse handlers */
+/* mouse move handler */
 
-RectangleForm::MoveRectangle::MoveRectangle(RectangleForm* form)
+RectangleForm::MoveRectangle::MoveRectangle(RectangleForm* form, QPointF scenePos)
 {
     this->form = form;
+    this->lastPos = scenePos;
 }
 
-void RectangleForm::MoveRectangle::adjust(QPointF delta)
+void RectangleForm::MoveRectangle::adjust(QPointF scenePos)
 {
+    QPointF delta = scenePos - lastPos;
     form->rect->moveBy(delta.x(), delta.y());
     setText(form->ui->anchorX, form->rect->x());
     setText(form->ui->anchorY, form->rect->y());
+    lastPos = scenePos;
 }
 
-RectangleForm::ResizeRectangle::ResizeRectangle(RectangleForm *form, QPointF scenePos) :
-    endPos(scenePos)
+/* mouse resize handler */
+
+RectangleForm::ResizeRectangle::ResizeRectangle(RectangleForm *form, QPointF scenePos)
 {
     this->form = form;
     this->resizeHandle = ShapeAnchor::getAnchor(form->rect->rect(), form->rect->mapFromScene(scenePos));
 }
 
-void RectangleForm::ResizeRectangle::adjust(QPointF delta)
+void RectangleForm::ResizeRectangle::adjust(QPointF scenePos)
 {
-    endPos += delta;
-    resizeHandle = form->rect->moveTo(endPos, resizeHandle);
+    resizeHandle = form->rect->moveTo(scenePos, resizeHandle);
 
     setText(form->ui->anchorX, form->rect->x());
     setText(form->ui->anchorY, form->rect->y());
     setText(form->ui->width, form->rect->rect().width());
     setText(form->ui->height, form->rect->rect().height());
     form->ui->anchorButtons->button(form->rect->anchor())->setChecked(true);
+}
+
+/* mouse draw handler */
+
+RectangleForm::DrawRectangle::DrawRectangle(RectangleForm *form, QPointF scenePos)
+{
+    this->form = form;
+    startPos = scenePos;
+}
+
+void RectangleForm::DrawRectangle::adjust(QPointF scenePos)
+{
+    using namespace ShapeAnchor;
+    QPointF delta = scenePos - startPos;
+    Point anchor = Point(form->ui->anchorButtons->checkedId());
+    qreal width = std::abs(delta.x()), height = std::abs(delta.y());
+
+    if (isCenter(anchor, Horizontal)) width *= 2;
+    else anchor = setX(anchor, delta.x() > 0 ? LEFT : RIGHT);
+
+    if (isCenter(anchor, Vertical)) height *= 2;
+    else anchor = setY(anchor, delta.y() > 0 ? TOP : BOTTOM);
+
+    form->rect->setAnchor(anchor);
+    form->rect->setRect(getRect(anchor, width, height));
+
+    setText(form->ui->anchorX, form->rect->x());
+    setText(form->ui->anchorY, form->rect->y());
+    setText(form->ui->width, form->rect->rect().width());
+    setText(form->ui->height, form->rect->rect().height());
+    form->ui->anchorButtons->button(anchor)->setChecked(true);
 }

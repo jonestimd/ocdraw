@@ -27,6 +27,7 @@ private:
     bool restorePosition;
     QPoint position;
     QStackedLayout layout;
+    ShapeForm* form;
 };
 
 #endif // SHAPEDIALOG_H

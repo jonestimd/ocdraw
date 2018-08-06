@@ -12,7 +12,7 @@ public:
     ShapeEdit();
     virtual ~ShapeEdit() = 0;
 
-    virtual void adjust(QPointF delta) = 0;
+    virtual void adjust(QPointF scenePos) = 0;
 };
 
 #endif // SHAPEEDIT_H

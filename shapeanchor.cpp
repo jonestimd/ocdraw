@@ -60,3 +60,13 @@ ShapeAnchor::Point ShapeAnchor::swapY(ShapeAnchor::Point value)
 {
     return (value & Vertical) == 0 ? value : Point(value ^ Vertical);
 }
+
+ShapeAnchor::Point ShapeAnchor::setX(ShapeAnchor::Point value, int xAnchor)
+{
+    return Point((value & Vertical) + xAnchor);
+}
+
+ShapeAnchor::Point ShapeAnchor::setY(ShapeAnchor::Point value, int yAnchor)
+{
+    return Point((value & Horizontal) + yAnchor);
+}

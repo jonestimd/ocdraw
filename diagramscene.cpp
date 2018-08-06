@@ -11,7 +11,7 @@ DiagramScene::DiagramScene(QObject* parent) :
     search(0, 0, HIGHLIGHT_DIAMETER, HIGHLIGHT_DIAMETER),
     highlight(0, 0, HIGHLIGHT_DIAMETER, HIGHLIGHT_DIAMETER)
 {
-    moving = false;
+    dragging = false;
     highlighted = nullptr;
 
     QRadialGradient gradient = QRadialGradient(0.5, 0.5, 1);
@@ -41,29 +41,28 @@ void DiagramScene::drawBackground(QPainter *painter, const QRectF &rect)
 void DiagramScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
     QGraphicsScene::drawForeground(painter, rect);
-    if (highlighted != nullptr && ! moving) {
+    if (highlighted != nullptr && ! dragging) {
         painter->setBrush(highlightBrush);
         painter->drawEllipse(highlight);
     }
 }
 
-// TODO draw shape using mouse
 void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (highlighted != nullptr && event->button() == Qt::LeftButton) {
-        moving = true;
-        update(highlight);
-        emit selectShape(highlighted, highlight.center(), event->modifiers() & Qt::ControlModifier ? ShapeAction::Edit : ShapeAction::Move);
+    if (event->button() == Qt::LeftButton) {
+        dragging = true;
+        if (highlighted != nullptr) {
+            update(highlight);
+            emit selectShape(highlighted, event->scenePos(), event->modifiers() & Qt::ControlModifier ? ShapeAction::Edit : ShapeAction::Move);
+        }
+        else emit beginDraw(event->scenePos());
     }
 }
 
 void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (moving) {
-        QPointF delta = event->scenePos() - event->lastScenePos();
-        emit changeShape(highlighted, delta, false);
-    }
-    else {
+    if (dragging) emit changeShape(event->scenePos(), false);
+    else if (event->buttons() == Qt::NoButton) {
         search.moveCenter(event->scenePos());
         QList<QGraphicsItem*> items = this->items(search, Qt::IntersectsItemShape, Qt::AscendingOrder);
         for (int i = 0; i < items.length(); i++) {
@@ -76,12 +75,10 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (moving) {
-        QPointF delta = event->scenePos() - event->lastScenePos();
-        highlighted->moveBy(delta.x(), delta.y());
-        emit changeShape(highlighted, delta, true);
-        moving = false;
-        updateHighlight(highlighted, event->scenePos());
+    if (dragging) {
+        emit changeShape(event->scenePos(), true);
+        dragging = false;
+        if (highlighted != nullptr) updateHighlight(highlighted, event->scenePos());
     }
 }
 

@@ -26,6 +26,7 @@ public:
     ~RectangleForm() override;
 
     virtual void initialize() override;
+    virtual void uninitialize() override;
 
 public slots:
     void editShape(RoundedRect* shape, QPointF scenePos, ShapeAction action);
@@ -59,7 +60,8 @@ private slots:
     void on_newButton_clicked();
     void on_deleteButton_clicked();
 
-    void on_changeShape(QGraphicsItem* shape, QPointF delta, bool complete);
+    void on_changeShape(QPointF delta, bool complete);
+    void on_beginDraw(QPointF scenePos);
 
 private:
     Ui::RectangleForm *ui;
@@ -72,6 +74,7 @@ private:
     ShapeEdit* edit;
 
     void validate(qreal width, qreal height);
+    void createRect(ShapeAnchor::Point anchor, qreal width, qreal height);
     void setColorIcon(const QColor color, QToolButton *button);
     void watchEvents();
     void unwatchEvents();
@@ -79,21 +82,29 @@ private:
 
     struct MoveRectangle : public ShapeEdit
     {
-        MoveRectangle(RectangleForm* form);
-        virtual void adjust(QPointF delta) override;
+        MoveRectangle(RectangleForm* form, QPointF scenePos);
+        virtual void adjust(QPointF scenePos) override;
     private:
         RectangleForm* form;
+        QPointF lastPos;
     };
 
     struct ResizeRectangle : public ShapeEdit
     {
         ResizeRectangle(RectangleForm* form, QPointF scenePos);
-        virtual void adjust(QPointF delta) override;
+        virtual void adjust(QPointF scenePos) override;
     private:
         RectangleForm* form;
         ShapeAnchor::Point resizeHandle;
-        QPointF endPos;
-        qreal mx, my, mw, mh;
+    };
+
+    struct DrawRectangle : public ShapeEdit
+    {
+        DrawRectangle(RectangleForm* form, QPointF scenePos);
+        virtual void adjust(QPointF scenePos) override;
+    private:
+        RectangleForm* form;
+        QPointF startPos;
     };
 };
 

@@ -7,9 +7,13 @@ ShapeDialog::ShapeDialog(QWidget* parent) :
     restorePosition = false;
     position = QPoint();
     setLayout(&layout);
+    form = nullptr;
 }
 
 void ShapeDialog::show(ShapeForm* form) {
+    if (this->form != form && this->form != nullptr) this->form->uninitialize();
+    this->form = form;
+
     QWidget* p = qobject_cast<QWidget*>(parent());
     if (restorePosition) move(p->pos() + position);
     else move(p->geometry().topRight());
@@ -39,4 +43,5 @@ void ShapeDialog::keyPressEvent(QKeyEvent* event)
 void ShapeDialog::onClose()
 {
     position = pos() - qobject_cast<QWidget*>(parent())->pos();
+    form->uninitialize();
 }

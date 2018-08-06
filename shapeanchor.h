@@ -9,6 +9,7 @@
 #define RIGHT 0x10
 #define TOP 0x02
 #define BOTTOM 0x01
+#define CENTER 0
 
 namespace ShapeAnchor
 {
@@ -54,6 +55,9 @@ namespace ShapeAnchor
 
     Point swapX(Point value);
     Point swapY(Point value);
+
+    Point setX(Point value, int xAnchor);
+    Point setY(Point value, int yAnchor);
 };
 
 #endif // SHAPEANCHOR_H

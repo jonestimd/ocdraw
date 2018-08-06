@@ -15,9 +15,14 @@ public:
     virtual ~ShapeForm();
 
     /**
-     * @brief Called by ShapeDialog to initialzie the form.
+     * @brief Called by \c ShapeDialog to initialzie the form before it is displayed.
      */
     virtual void initialize() = 0;
+
+    /**
+     * @brief Called by \c ShapeDialog when the form is hidden.
+     */
+    virtual void uninitialize() = 0;
 
     static void setText(QLineEdit* field, qreal value);
 };

@@ -18,19 +18,23 @@ public:
 
 signals:
     /**
-     * @brief the selectShape signal is emitted when the user clicks on a shape.
+     * @brief The selectShape signal is emitted when the user clicks on a shape.
      * @param shape
      * @param scenePos location of the selected control point on the shape
      * @param action
      */
     void selectShape(QGraphicsItem* shape, QPointF scenePos, ShapeAction action);
     /**
-     * @brief Then changeShape signal is emitted when the user is moving/editing a shape using the mouse.
-     * @param shape the shape to modify
+     * @brief The changeShape signal is emitted when the user is moving/editing a shape using the mouse.
      * @param delta the amount to move the shape or control point
      * @param complete true if this is the end of the edit
      */
-    void changeShape(QGraphicsItem* shape, QPointF delta, bool complete);
+    void changeShape(QPointF delta, bool complete);
+    /**
+     * @brief The beginDraw signla is emitted for a mouse press that doesn't select a shape.
+     * @param scenePos
+     */
+    void beginDraw(QPointF scenePos);
 
 protected:
     virtual void drawBackground(QPainter* painter, const QRectF& rect) override;
@@ -47,7 +51,7 @@ private:
     QBrush highlightBrush;
     QGraphicsItem* highlighted;
 
-    bool moving;
+    bool dragging;
 
     bool updateHighlight(QGraphicsItem* item, QPointF scenePos);
 };

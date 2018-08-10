@@ -41,7 +41,6 @@ void MainWindow::on_actionRectangle_triggered()
 
 void MainWindow::on_addShape(QGraphicsItem* shape)
 {
-    selected = shape;
     ui->graphicsView->scene()->addItem(shape);
 }
 
@@ -50,7 +49,6 @@ void MainWindow::on_deleteShape(QGraphicsItem* shape)
     if (shape != nullptr) {
         scene.removeItem(shape);
         delete shape;
-        if (selected == shape) selected = nullptr;
     }
 }
 

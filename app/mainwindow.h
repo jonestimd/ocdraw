@@ -30,8 +30,6 @@ private:
     DiagramScene scene;
     ShapeDialog* toolDialog;
     RectangleForm* rectangleForm;
-
-    QGraphicsItem* selected;
 };
 
 #endif // MAINWINDOW_H

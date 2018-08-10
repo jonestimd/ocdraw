@@ -82,6 +82,7 @@ void RectangleForm::editShape(RoundedRect* shape, QPointF scenePos, ShapeAction 
             unwatchEvents();
         }
         this->rect = shape;
+        this->rect->setSelected(true);
         setText(ui->anchorX, rect->x());
         setText(ui->anchorY, rect->y());
         setText(ui->width, rect->rect().width());

@@ -53,3 +53,6 @@ HEADERS += \
 FORMS += \
         mainwindow.ui \
     rectangleform.ui
+
+RESOURCES += \
+    icons.qrc

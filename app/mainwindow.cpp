@@ -39,10 +39,10 @@ void MainWindow::on_actionRectangle_triggered()
     toolDialog->activateWindow();
 }
 
-void MainWindow::on_addShape(QGraphicsItem* rect)
+void MainWindow::on_addShape(QGraphicsItem* shape)
 {
-    selected = rect;
-    ui->graphicsView->scene()->addItem(rect);
+    selected = shape;
+    ui->graphicsView->scene()->addItem(shape);
 }
 
 void MainWindow::on_deleteShape(QGraphicsItem* shape)

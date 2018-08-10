@@ -49,6 +49,7 @@ void RectangleForm::initialize()
 void RectangleForm::uninitialize()
 {
     disconnect(diagram, &DiagramScene::beginDraw, this, &RectangleForm::on_beginDraw);
+    if (rect != nullptr) rect->setSelected(false);
 }
 
 void RectangleForm::on_changeShape(QPointF delta, bool complete)
@@ -76,7 +77,10 @@ void RectangleForm::on_beginDraw(QPointF scenePos)
 void RectangleForm::editShape(RoundedRect* shape, QPointF scenePos, ShapeAction action)
 {
     if (this->rect != shape) {
-        if (this->rect != nullptr) unwatchEvents();
+        if (this->rect != nullptr) {
+            this->rect->setSelected(false);
+            unwatchEvents();
+        }
         this->rect = shape;
         setText(ui->anchorX, rect->x());
         setText(ui->anchorY, rect->y());
@@ -159,6 +163,8 @@ void RectangleForm::createRect(ShapeAnchor::Point anchor, qreal width, qreal hei
     rect->setCornerWidth(ui->radiusX->text().toDouble());
     rect->setCornerHeight(ui->radiusY->text().toDouble());
     rect->setAnchor(anchor);
+    rect->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    rect->setSelected(true);
     on_name_textEdited(ui->name->text());
     if (ui->stroke->isChecked()) rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
     else rect->setPen(QPen(Qt::transparent));
@@ -280,6 +286,7 @@ void RectangleForm::unwatchEvents()
 void RectangleForm::reset()
 {
     if (rect != nullptr) {
+        if (rect->scene() != nullptr) rect->setSelected(false);
         unwatchEvents();
         rect = nullptr;
         nextId++;

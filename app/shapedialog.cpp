@@ -30,6 +30,12 @@ void ShapeDialog::show(ShapeForm* form) {
     QDialog::show();
 }
 
+void ShapeDialog::hide()
+{
+    QDialog::hide();
+    onClose();
+}
+
 void ShapeDialog::closeEvent(QCloseEvent* event)
 {
     onClose();

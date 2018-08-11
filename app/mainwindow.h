@@ -23,7 +23,8 @@ private slots:
     void on_actionRectangle_triggered();
     void on_addShape(QGraphicsItem* rect);
     void on_deleteShape(QGraphicsItem* shape);
-    void on_selectShape(QGraphicsItem* shape, QPointF scenePos, ShapeAction action);
+    void on_shapeSelected(QGraphicsItem* shape, QPointF scenePos, ShapeAction action);
+    void on_shapeUnselected();
 
 private:
     Ui::MainWindow* ui;

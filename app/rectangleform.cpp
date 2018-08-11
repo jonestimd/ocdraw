@@ -49,7 +49,7 @@ void RectangleForm::initialize()
 void RectangleForm::uninitialize()
 {
     disconnect(diagram, &DiagramScene::beginDraw, this, &RectangleForm::on_beginDraw);
-    if (rect != nullptr) rect->setSelected(false);
+    if (rect != nullptr && rect->scene()->selectedItems().length() == 1) rect->setSelected(false);
 }
 
 void RectangleForm::on_changeShape(QPointF delta, bool complete)
@@ -74,13 +74,10 @@ void RectangleForm::on_beginDraw(QPointF scenePos)
     edit = new DrawRectangle(this, scenePos);
 }
 
-void RectangleForm::editShape(RoundedRect* shape, QPointF scenePos, ShapeAction action)
+void RectangleForm::editShape(RoundedRect* shape)
 {
     if (this->rect != shape) {
-        if (this->rect != nullptr) {
-            this->rect->setSelected(false);
-            unwatchEvents();
-        }
+        if (this->rect != nullptr) unwatchEvents();
         this->rect = shape;
         this->rect->setSelected(true);
         setText(ui->anchorX, rect->x());
@@ -106,6 +103,11 @@ void RectangleForm::editShape(RoundedRect* shape, QPointF scenePos, ShapeAction 
         ui->deleteButton->setEnabled(true);
         watchEvents();
     }
+}
+
+void RectangleForm::editShape(RoundedRect* shape, QPointF scenePos, ShapeAction action)
+{
+    editShape(shape);
     switch (action) {
     case ShapeAction::Move : edit = new MoveRectangle(this, scenePos); break;
     case ShapeAction::Edit : edit = new ResizeRectangle(this, scenePos); break;

@@ -15,19 +15,20 @@ class ShapeDialog : public QDialog
 public:
     explicit ShapeDialog(QWidget* parent = nullptr);
 
-public slots:
     void show(ShapeForm* form);
+    void hide();
 
 protected:
     void closeEvent(QCloseEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
-    virtual void onClose();
 
 private:
     bool restorePosition;
     QPoint position;
     QStackedLayout layout;
     ShapeForm* form;
+
+    void onClose();
 };
 
 #endif // SHAPEDIALOG_H

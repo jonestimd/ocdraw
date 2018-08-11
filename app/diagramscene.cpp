@@ -3,7 +3,6 @@
 #include <QGraphicsItem>
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
-#include <QDebug>
 
 DiagramScene::DiagramScene(QObject* parent) :
     QGraphicsScene(parent),
@@ -50,12 +49,30 @@ void DiagramScene::drawForeground(QPainter *painter, const QRectF &rect)
 void DiagramScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        dragging = true;
         if (highlighted != nullptr) {
-            update(highlight);
-            emit selectShape(highlighted, event->scenePos(), event->modifiers() & Qt::ControlModifier ? ShapeAction::Edit : ShapeAction::Move);
+            if (event->modifiers() & Qt::ShiftModifier) {
+                if (highlighted->isSelected()) {
+                    highlighted->setSelected(false);
+                    emit shapeUnselected();
+                }
+                else {
+                    highlighted->setSelected(true);
+                    emit shapeSelected(highlighted, event->scenePos(), ShapeAction::Move);
+                }
+            }
+            else {
+                dragging = true;
+                update(highlight);
+                clearSelection();
+                highlighted->setSelected(true);
+                emit shapeSelected(highlighted, event->scenePos(), event->modifiers() & Qt::ControlModifier ? ShapeAction::Edit : ShapeAction::Move);
+            }
         }
-        else emit beginDraw(event->scenePos());
+        else {
+            dragging = true;
+            clearSelection();
+            emit beginDraw(event->scenePos());
+        }
     }
 }
 
@@ -76,7 +93,7 @@ void DiagramScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void DiagramScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if (dragging) {
-        emit changeShape(event->scenePos(), true);
+        emit changeShape(event->scenePos(), true); // TODO handle multiple selection
         dragging = false;
         if (highlighted != nullptr) updateHighlight(highlighted, event->scenePos());
     }

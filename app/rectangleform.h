@@ -28,7 +28,7 @@ public:
     virtual void initialize() override;
     virtual void uninitialize() override;
 
-public slots:
+    void editShape(RoundedRect* shape);
     void editShape(RoundedRect* shape, QPointF scenePos, ShapeAction action);
 
 signals:

@@ -18,12 +18,17 @@ public:
 
 signals:
     /**
-     * @brief The selectShape signal is emitted when the user clicks on a shape.
+     * @brief The shapeSelected signal is emitted when the user clicks on a shape.
      * @param shape
      * @param scenePos location of the selected control point on the shape
      * @param action
      */
-    void selectShape(QGraphicsItem* shape, QPointF scenePos, ShapeAction action);
+    void shapeSelected(QGraphicsItem* shape, QPointF scenePos, ShapeAction action);
+    /**
+     * @brief The shapeUnelected signal is emitted when a shape is removed from the selection.
+     * @param shape
+     */
+    void shapeUnselected();
     /**
      * @brief The changeShape signal is emitted when the user is moving/editing a shape using the mouse.
      * @param delta the amount to move the shape or control point

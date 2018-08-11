@@ -1,6 +1,7 @@
 #include "roundedrect.h"
 #include "ocdglobals.h"
 #include "QVariant"
+#include <QStyleOptionGraphicsItem>
 #include "math.h"
 
 RoundedRect::RoundedRect(QRectF rect, QGraphicsItem* parent) :
@@ -24,7 +25,25 @@ void RoundedRect::paint(QPainter* painter, const QStyleOptionGraphicsItem* optio
 {
     if (m_cornerWidth > 0 && m_cornerHeight > 0) {
         painter->setPen(pen());
+        painter->setBrush(brush());
         painter->drawRoundedRect(rect(), m_cornerWidth, m_cornerHeight);
+        if (option->state & QStyle::State_Selected) {
+            // TODO check for too small to be visible and skip
+            const qreal pad = 0; // pen().widthF() / 2;
+            const QColor fgcolor = option->palette.windowText().color();
+            const QColor bgcolor( // ensure good contrast against fgcolor
+                fgcolor.red()   > 127 ? 0 : 255,
+                fgcolor.green() > 127 ? 0 : 255,
+                fgcolor.blue()  > 127 ? 0 : 255);
+
+            painter->setPen(QPen(bgcolor, 0, Qt::SolidLine));
+            painter->setBrush(Qt::NoBrush);
+            painter->drawRect(boundingRect().adjusted(pad, pad, -pad, -pad));
+
+            painter->setPen(QPen(option->palette.windowText(), 0, Qt::DashLine));
+            painter->setBrush(Qt::NoBrush);
+            painter->drawRect(boundingRect().adjusted(pad, pad, -pad, -pad));
+        }
     }
     else QGraphicsRectItem::paint(painter, option, widget);
 }
@@ -97,7 +116,7 @@ qreal RoundedRect::cornerWidth() const
 
 void RoundedRect::setCornerWidth(qreal width)
 {
-    if (m_cornerHeight != width) {
+    if (m_cornerWidth != width) {
         m_cornerWidth = width;
         update();
     }

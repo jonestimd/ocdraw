@@ -41,7 +41,7 @@ RectangleForm::~RectangleForm()
 
 void RectangleForm::initialize()
 {
-    setWindowTitle("Rectangle");
+    window()->setWindowTitle(tr("Rectangle", "dialog title"));
     connect(diagram, &DiagramScene::beginDraw, this, &RectangleForm::on_beginDraw);
     reset();
 }
@@ -210,7 +210,7 @@ void RectangleForm::on_name_textEdited(const QString &arg1)
 
 void RectangleForm::on_fillColor_clicked()
 {
-    const QColor color = QColorDialog::getColor(fillColor, this, "Select Fill Color", QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
+    const QColor color = QColorDialog::getColor(fillColor, this, tr("Select Fill Color", "dialog title"), QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
 
     if (color.isValid() && color != fillColor) {
         fillColor = color;
@@ -224,7 +224,7 @@ void RectangleForm::on_fillColor_clicked()
 
 void RectangleForm::on_strokeColor_clicked()
 {
-    const QColor color = QColorDialog::getColor(strokeColor, this, "Select Stroke Color", QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
+    const QColor color = QColorDialog::getColor(strokeColor, this, tr("Select Stroke Color", "dialog title"), QColorDialog::ShowAlphaChannel | QColorDialog::DontUseNativeDialog);
 
     if (color.isValid() && color != strokeColor) {
         strokeColor = color;
@@ -299,7 +299,7 @@ void RectangleForm::reset()
     ui->width->clear();
     ui->height->clear();
     ui->rotation->clear();
-    ui->name->setText(QString("rect-%1").arg(nextId));
+    ui->name->setText(tr("rect-%1", "rectangle name pattern").arg(nextId));
     ui->anchorX->setFocus();
     ui->deleteButton->setEnabled(false);
 }

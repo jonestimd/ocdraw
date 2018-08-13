@@ -56,3 +56,5 @@ FORMS += \
 
 RESOURCES += \
     icons.qrc
+
+TRANSLATIONS = ocdraw.ts

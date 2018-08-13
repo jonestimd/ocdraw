@@ -214,9 +214,9 @@ void RectangleForm::on_fillColor_clicked()
 
     if (color.isValid() && color != fillColor) {
         fillColor = color;
+        setColorIcon(fillColor, ui->fillColor);
         if (rect != nullptr && ui->fill->isChecked()) {
             rect->setBrush(QBrush(fillColor));
-            setColorIcon(fillColor, ui->fillColor);
             emit shapeChanged(rect);
         }
     }
@@ -228,9 +228,9 @@ void RectangleForm::on_strokeColor_clicked()
 
     if (color.isValid() && color != strokeColor) {
         strokeColor = color;
+        setColorIcon(strokeColor, ui->strokeColor);
         if (rect != nullptr && ui->stroke->isChecked()) {
             rect->setPen(QPen(QBrush(strokeColor), ui->strokeWidth->text().toDouble(), Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
-            setColorIcon(strokeColor, ui->strokeColor);
             emit shapeChanged(rect);
         }
     }

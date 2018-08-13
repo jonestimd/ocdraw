@@ -37,6 +37,27 @@ ShapeAnchor::Point ShapeAnchor::getAnchor(QRectF rect, QPointF anchor)
     return Point(point);
 }
 
+QPointF ShapeAnchor::getPos(QRectF rect, int anchor)
+{
+    return getPos(rect, Point(anchor));
+}
+
+QPointF ShapeAnchor::getPos(QRectF rect, Point anchor)
+{
+    QPointF pos = rect.center();
+    switch (anchor) {
+    case TopLeft: return rect.topLeft();
+    case Top: pos.ry() = rect.top(); return pos;
+    case TopRight: return rect.topRight();
+    case Left: pos.rx() = rect.left(); return pos;
+    case Center: return pos;
+    case Right: pos.rx() = rect.right(); return pos;
+    case BottomLeft: return rect.bottomLeft();
+    case Bottom: pos.ry() = rect.bottom(); return pos;
+    case BottomRight: return rect.bottomRight();
+    }
+}
+
 int ShapeAnchor::horizontal(ShapeAnchor::Point value)
 {
     return value & Horizontal;

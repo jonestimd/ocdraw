@@ -26,7 +26,7 @@ public:
     ~RectangleForm() override;
 
     virtual void initialize() override;
-    virtual void uninitialize() override;
+    virtual void uninitialize(bool closing) override;
 
     void editShape(RoundedRect* shape);
     void editShape(RoundedRect* shape, QPointF scenePos, ShapeAction action);
@@ -75,7 +75,6 @@ private:
 
     void validate(qreal width, qreal height);
     void createRect(ShapeAnchor::Point anchor, qreal width, qreal height);
-    void setColorIcon(const QColor color, QToolButton *button);
     void watchEvents();
     void unwatchEvents();
     void reset();

@@ -5,6 +5,7 @@
 #include <QGraphicsItem>
 #include "shapedialog.h"
 #include "rectangleform.h"
+#include "multiselectform.h"
 #include "rectanglemodel.h"
 
 namespace Ui {
@@ -29,8 +30,11 @@ private slots:
 private:
     Ui::MainWindow* ui;
     DiagramScene scene;
-    ShapeDialog* toolDialog;
-    RectangleForm* rectangleForm;
+    ShapeDialog toolDialog;
+    RectangleForm rectangleForm;
+    MultiSelectForm multiSelectForm;
+
+    void showToolDialog(ShapeForm* form);
 };
 
 #endif // MAINWINDOW_H

@@ -35,7 +35,8 @@ SOURCES += \
     shapeanchor.cpp \
     diagramscene.cpp \
     selectableshape.cpp \
-    shapeedit.cpp
+    shapeedit.cpp \
+    multiselectform.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,11 +49,13 @@ HEADERS += \
     shapeanchor.h \
     diagramscene.h \
     selectableshape.h \
-    shapeedit.h
+    shapeedit.h \
+    multiselectform.h
 
 FORMS += \
         mainwindow.ui \
-    rectangleform.ui
+    rectangleform.ui \
+    multiselectform.ui
 
 RESOURCES += \
     icons.qrc

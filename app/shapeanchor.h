@@ -49,6 +49,9 @@ namespace ShapeAnchor
 
     Point getAnchor(QRectF rect, QPointF anchor);
 
+    QPointF getPos(QRectF rect, int anchor);
+    QPointF getPos(QRectF rect, Point anchor);
+
     int horizontal(Point value);
     int vertical(Point value);
     bool isCenter(Point value, Mask mask = Both);

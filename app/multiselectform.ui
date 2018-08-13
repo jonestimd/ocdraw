@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MultiSelectForm</class>
+ <widget class="QWidget" name="MultiSelectForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>224</width>
+    <height>537</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item row="3" column="1" colspan="2">
+       <widget class="QLineEdit" name="rotation">
+        <property name="placeholderText">
+         <string>rotation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>&amp;rotation</string>
+        </property>
+        <property name="buddy">
+         <cstring>rotation</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>&amp;position</string>
+        </property>
+        <property name="buddy">
+         <cstring>posX</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="posX">
+        <property name="placeholderText">
+         <string>x</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="posY">
+        <property name="placeholderText">
+         <string>y</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="relativePosition">
+        <property name="text">
+         <string>relati&amp;ve</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="rotationPoint">
+     <property name="title">
+      <string>ro&amp;tation point</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="0">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="2" column="2">
+       <widget class="QRadioButton" name="Bottom">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QRadioButton" name="BottomRight">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QRadioButton" name="Center">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="Left">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QRadioButton" name="BottomLeft">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="TopLeft">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QRadioButton" name="Right">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QRadioButton" name="TopRight">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="Top">
+        <property name="text">
+         <string/>
+        </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anchorButtons</string>
+        </attribute>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="styleFrame" native="true">
+     <layout class="QGridLayout" name="gridLayout_4">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="stroke">
+        <property name="text">
+         <string>&amp;stroke</string>
+        </property>
+        <property name="tristate">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="strokeWidth">
+        <property name="placeholderText">
+         <string>stroke width</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="fill">
+        <property name="text">
+         <string>&amp;fill</string>
+        </property>
+        <property name="tristate">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QToolButton" name="strokeColor">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QToolButton" name="fillColor">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QGridLayout" name="gridLayout_3">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="applyButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>&amp;Apply</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>relativePosition</tabstop>
+  <tabstop>posX</tabstop>
+  <tabstop>posY</tabstop>
+  <tabstop>rotation</tabstop>
+  <tabstop>rotationPoint</tabstop>
+  <tabstop>TopLeft</tabstop>
+  <tabstop>fill</tabstop>
+  <tabstop>fillColor</tabstop>
+  <tabstop>stroke</tabstop>
+  <tabstop>strokeColor</tabstop>
+  <tabstop>strokeWidth</tabstop>
+  <tabstop>applyButton</tabstop>
+  <tabstop>Top</tabstop>
+  <tabstop>TopRight</tabstop>
+  <tabstop>Left</tabstop>
+  <tabstop>Center</tabstop>
+  <tabstop>Right</tabstop>
+  <tabstop>BottomLeft</tabstop>
+  <tabstop>Bottom</tabstop>
+  <tabstop>BottomRight</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="anchorButtons"/>
+ </buttongroups>
+</ui>

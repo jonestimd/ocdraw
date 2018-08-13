@@ -7,17 +7,18 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    scene()
+    scene(),
+    toolDialog(this), rectangleForm(this, &scene), multiSelectForm(this, &scene)
 {
     ui->setupUi(this);
     ui->graphicsView->setRenderHint(QPainter::Antialiasing);
     ui->graphicsView->setScene(&scene);
 
-    toolDialog = nullptr;
-    rectangleForm = nullptr;
-
     connect(&scene, &DiagramScene::shapeSelected, this, &MainWindow::on_shapeSelected);
     connect(&scene, &DiagramScene::shapeUnselected, this, &MainWindow::on_shapeUnselected);
+
+    connect(&rectangleForm, &RectangleForm::addShape, this, &MainWindow::on_addShape);
+    connect(&rectangleForm, &RectangleForm::deleteShape, this, &MainWindow::on_deleteShape);
 }
 
 MainWindow::~MainWindow()
@@ -27,17 +28,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionRectangle_triggered()
 {
-    if (!toolDialog) {
-        toolDialog = new ShapeDialog(this);
-    }
-    if (!rectangleForm) {
-        rectangleForm = new RectangleForm(this, static_cast<DiagramScene*>(ui->graphicsView->scene()));
-        connect(rectangleForm, &RectangleForm::addShape, this, &MainWindow::on_addShape);
-        connect(rectangleForm, &RectangleForm::deleteShape, this, &MainWindow::on_deleteShape);
-    }
-    toolDialog->show(rectangleForm);
-    toolDialog->raise();
-    toolDialog->activateWindow();
+    showToolDialog(&rectangleForm);
+}
+
+void MainWindow::showToolDialog(ShapeForm* form)
+{
+    toolDialog.show(form);
+    toolDialog.raise();
+    toolDialog.activateWindow();
 }
 
 void MainWindow::on_addShape(QGraphicsItem* shape)
@@ -57,11 +55,11 @@ void MainWindow::on_shapeSelected(QGraphicsItem* shape, QPointF scenePos, ShapeA
 {
     if (scene.selectedItems().length() == 1) {
         if (shape->type() == RoundedRect::Type) {
-            if (!rectangleForm->isVisible()) on_actionRectangle_triggered();
-            rectangleForm->editShape(qgraphicsitem_cast<RoundedRect*>(shape), scenePos, action);
+            if (!rectangleForm.isVisible()) on_actionRectangle_triggered();
+            rectangleForm.editShape(qgraphicsitem_cast<RoundedRect*>(shape), scenePos, action);
         }
     }
-    else if (toolDialog->isVisible()) toolDialog->hide();
+    else showToolDialog(&multiSelectForm);
 }
 
 void MainWindow::on_shapeUnselected()
@@ -69,9 +67,10 @@ void MainWindow::on_shapeUnselected()
     if (scene.selectedItems().length() == 1) {
         QGraphicsItem* shape = scene.selectedItems()[0];
         if (shape->type() == RoundedRect::Type) {
-            if (!rectangleForm->isVisible()) on_actionRectangle_triggered();
-            rectangleForm->editShape(qgraphicsitem_cast<RoundedRect*>(shape));
+            if (!rectangleForm.isVisible()) on_actionRectangle_triggered();
+            rectangleForm.editShape(qgraphicsitem_cast<RoundedRect*>(shape));
         }
     }
-    else if (toolDialog->isVisible()) toolDialog->hide();
+    else if (scene.selectedItems().length() > 1) showToolDialog(&multiSelectForm);
+    else if (toolDialog.isVisible()) toolDialog.hide();
 }

@@ -21,9 +21,11 @@ public:
 
     /**
      * @brief Called by \c ShapeDialog when the form is hidden.
+     * @param closing true if the dialog is closing
      */
-    virtual void uninitialize() = 0;
+    virtual void uninitialize(bool closing) = 0;
 
+    static void setColorIcon(const QColor color, QToolButton *button);
     static void setText(QLineEdit* field, qreal value);
 };
 

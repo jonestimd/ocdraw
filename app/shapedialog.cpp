@@ -12,7 +12,7 @@ ShapeDialog::ShapeDialog(QWidget* parent) :
 }
 
 void ShapeDialog::show(ShapeForm* form) {
-    if (this->form != form && this->form != nullptr) this->form->uninitialize();
+    if (this->form != form && this->form != nullptr) this->form->uninitialize(false);
     this->form = form;
 
     if (! isVisible()) {
@@ -23,8 +23,9 @@ void ShapeDialog::show(ShapeForm* form) {
         restorePosition = true;
     }
     if (layout.currentWidget() != form) {
-        if (layout.count() == 0) layout.addWidget(form);
-        else layout.replaceWidget(layout.currentWidget(), form);
+        int index = layout.indexOf(form);
+        if (index < 0) index = layout.addWidget(form);
+        layout.setCurrentIndex(index);
     }
     form->initialize();
     QDialog::show();
@@ -53,5 +54,5 @@ void ShapeDialog::keyPressEvent(QKeyEvent* event)
 void ShapeDialog::onClose()
 {
     position = pos() - qobject_cast<QWidget*>(parent())->pos();
-    form->uninitialize();
+    form->uninitialize(true);
 }

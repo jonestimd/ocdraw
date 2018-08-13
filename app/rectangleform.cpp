@@ -46,10 +46,10 @@ void RectangleForm::initialize()
     reset();
 }
 
-void RectangleForm::uninitialize()
+void RectangleForm::uninitialize(bool closing)
 {
     disconnect(diagram, &DiagramScene::beginDraw, this, &RectangleForm::on_beginDraw);
-    if (rect != nullptr && rect->scene()->selectedItems().length() == 1) rect->setSelected(false);
+    if (closing && rect != nullptr) rect->setSelected(false);
 }
 
 void RectangleForm::on_changeShape(QPointF delta, bool complete)
@@ -250,13 +250,6 @@ void RectangleForm::on_stroke_toggled(bool checked)
         rect->pen().setColor(checked ? strokeColor : Qt::transparent);
         emit shapeChanged(rect);
     }
-}
-
-void RectangleForm::setColorIcon(const QColor color, QToolButton *button)
-{
-    QPixmap pixmap(16, 16);
-    pixmap.fill(color);
-    button->setIcon(QIcon(pixmap));
 }
 
 void RectangleForm::on_strokeWidth_textEdited(const QString &arg1)

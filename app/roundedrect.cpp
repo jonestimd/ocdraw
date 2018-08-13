@@ -3,6 +3,7 @@
 #include "QVariant"
 #include <QStyleOptionGraphicsItem>
 #include "math.h"
+#include <QDebug>
 
 RoundedRect::RoundedRect(QRectF rect, QGraphicsItem* parent) :
     QGraphicsRectItem(rect, parent),
